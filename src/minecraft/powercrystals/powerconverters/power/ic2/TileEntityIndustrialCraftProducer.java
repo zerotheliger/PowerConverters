@@ -3,22 +3,28 @@ package powercrystals.powerconverters.power.ic2;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergyAcceptor;
+import ic2.api.energy.tile.IEnergySink;
 import ic2.api.energy.tile.IEnergySource;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
+import powercrystals.core.position.BlockPosition;
 import powercrystals.powerconverters.PowerConverterCore;
 import powercrystals.powerconverters.power.TileEntityEnergyProducer;
 
+import java.util.List;
+
 public class TileEntityIndustrialCraftProducer extends TileEntityEnergyProducer<IEnergyAcceptor> implements IEnergySource
 {
+    private final double maxEnergy;
     private double energy;
 	private boolean _isAddedToEnergyNet;
 	private boolean _didFirstAddToNet;
 	
 	private int _packetCount;
 	
-	public TileEntityIndustrialCraftProducer()
+	@SuppressWarnings("UnusedDeclaration")
+    public TileEntityIndustrialCraftProducer()
 	{
 		this(0);
 	}
@@ -29,19 +35,25 @@ public class TileEntityIndustrialCraftProducer extends TileEntityEnergyProducer<
 		if(voltageIndex == 0)
 		{
 			_packetCount = PowerConverterCore.throttleIC2LVProducer.getInt();
+            maxEnergy = 32;
 		}
 		else if(voltageIndex == 1)
 		{
 			_packetCount = PowerConverterCore.throttleIC2MVProducer.getInt();
+            maxEnergy = 128;
 		}
 		else if(voltageIndex == 2)
 		{
 			_packetCount = PowerConverterCore.throttleIC2HVProducer.getInt();
+            maxEnergy = 512;
 		}
 		else if(voltageIndex == 3)
 		{
 			_packetCount = PowerConverterCore.throttleIC2EVProducer.getInt();
-		}
+            maxEnergy = 2048;
+		} else {
+            maxEnergy = 0;
+        }
 	}
 	
 	@Override
@@ -81,33 +93,41 @@ public class TileEntityIndustrialCraftProducer extends TileEntityEnergyProducer<
 	}
 	
 	@Override
-	public double produceEnergy(double energy)
-	{
+	public double produceEnergy(double _energy) {
 		if(!_isAddedToEnergyNet)
-		{
-			return energy;
-		}
+			return _energy;
 		
-		double eu = energy / PowerConverterCore.powerSystemIndustrialCraft.getInternalEnergyPerOutput();
-		
+		double eu = _energy / PowerConverterCore.powerSystemIndustrialCraft.getInternalEnergyPerOutput();
 		for(int i = 0; i < _packetCount; i++)
 		{
-			double producedEu = Math.min(eu, getMaxEnergyOutput());
-            energy += producedEu;
-            eu -= producedEu;
-            if (eu < getMaxEnergyOutput())
+            if (energy >= maxEnergy)
                 break;
-            /*
-			EnergyTileSourceEvent e = new EnergyTileSourceEvent(this, producedEu);
-			MinecraftForge.EVENT_BUS.post(e);
-			eu -= (producedEu - e.amount);
-			if(e.amount == producedEu || eu < getMaxEnergyOutput())
-			{
-				break;
-			}
-			*/
+			double producedEu = Math.min(eu, getMaxEnergyOutput());
+            _energy += producedEu;
+            eu -= producedEu;
+            if ((eu < getMaxEnergyOutput()))
+                break;
 		}
-		this.energy = eu * PowerConverterCore.powerSystemIndustrialCraft.getInternalEnergyPerOutput();
+        if (energy < maxEnergy)
+		    energy = eu * PowerConverterCore.powerSystemIndustrialCraft.getInternalEnergyPerOutput();
+        if (energy > 0) {
+            List<BlockPosition> positions = new BlockPosition(xCoord, yCoord, zCoord).getAdjacent(true);
+            for (BlockPosition p : positions) {
+                TileEntity te = worldObj.getBlockTileEntity(p.x, p.y, p.z);
+                if ((te instanceof IEnergySink) && !(te instanceof TileEntityIndustrialCraftConsumer)) {
+                    IEnergySink sink = (IEnergySink) te;
+                    double demands = sink.getMaxSafeInput();
+                    if (energy < demands)
+                        demands = energy;
+
+                    double leftOver = sink.injectEnergyUnits(p.orientation, demands);
+                    energy = 0;
+                    energy += leftOver;
+                    if (energy <= 0)
+                        break; // no more energy to give, so stop scanning
+                }
+            }
+        }
 		return this.energy;
 	}
 
@@ -131,7 +151,7 @@ public class TileEntityIndustrialCraftProducer extends TileEntityEnergyProducer<
      */
     @Override
     public double getOfferedEnergy() {
-        return energy;
+        return Math.min(energy, maxEnergy);
     }
 
     /**
