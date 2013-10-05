@@ -1,81 +1,68 @@
 package powercrystals.powerconverters.power.buildcraft;
 
-import buildcraft.api.power.IPowerEmitter;
+import buildcraft.api.gates.IAction;
+import buildcraft.api.power.IPowerReceptor;
 import buildcraft.api.power.PowerHandler;
+import buildcraft.api.power.PowerHandler.PowerReceiver;
 import buildcraft.api.transport.IPipeConnection;
 import buildcraft.api.transport.IPipeTile;
-import net.minecraft.util.MathHelper;
+import buildcraft.core.IMachine;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import powercrystals.powerconverters.PowerConverterCore;
 import powercrystals.powerconverters.power.TileEntityEnergyConsumer;
-import buildcraft.api.power.PowerHandler.PowerReceiver;
-import buildcraft.api.power.IPowerReceptor;
 
-public class TileEntityBuildCraftConsumer extends TileEntityEnergyConsumer<IPowerReceptor> implements IPowerReceptor, IPowerEmitter, IPipeConnection
-{
-	private PowerHandler _powerProvider;
-	private int _mjLastTick = 0;
-	private long _lastTickInjected;
-	
-	public TileEntityBuildCraftConsumer()
-	{
-		super(PowerConverterCore.powerSystemBuildCraft, 0, IPowerReceptor.class);
-		_powerProvider = new PowerHandler(this, PowerHandler.Type.MACHINE);
-		_powerProvider.configure(2, 100, 1, 1000); // 25 latency
-	}
-	
-	@Override
-	public void updateEntity()
-	{
-		super.updateEntity();
-		if(worldObj.getWorldTime() - _lastTickInjected > 1)
-		{
-			_lastTickInjected = worldObj.getWorldTime();
-			_mjLastTick = 0;
-		}
-        receiveEnergy(10);
-	}
-	
-	public void receiveEnergy(float energy)
-	{
-		if(_lastTickInjected != worldObj.getWorldTime())
-		{
-			_lastTickInjected = worldObj.getWorldTime();
-			_mjLastTick = 0;
-		}
-		
-		_mjLastTick += MathHelper.floor_float(energy);
-        int used = (int)(energy * PowerConverterCore.powerSystemBuildCraft.getInternalEnergyPerInput());
-        float consumed;
-		if ((consumed = _powerProvider.useEnergy(used, used, true)) > 0) {
-            storeEnergy(consumed);
+public class TileEntityBuildCraftConsumer extends TileEntityEnergyConsumer<IPowerReceptor> implements IPowerReceptor, IPipeConnection, IMachine {
+    private PowerHandler _powerProvider;
+    private int _mjLastTick = 0;
+    private long _lastTickInjected;
+
+    public TileEntityBuildCraftConsumer() {
+        super(PowerConverterCore.powerSystemBuildCraft, 0, IPowerReceptor.class);
+        _powerProvider = new PowerHandler(this, PowerHandler.Type.MACHINE);
+        _powerProvider.configure(0, 100, 0, 1000); // 25 latency
+    }
+
+    @Override
+    public void updateEntity() {
+        super.updateEntity();
+        if (worldObj.getWorldTime() - _lastTickInjected > 1) {
+            _lastTickInjected = worldObj.getWorldTime();
+            _mjLastTick = 0;
         }
-	}
+        receiveEnergy();
+    }
 
-	@Override
-	public PowerReceiver getPowerReceiver(ForgeDirection dir)
-	{
-		return _powerProvider.getPowerReceiver();
-	}
+    public void receiveEnergy() {
+        if (_lastTickInjected != worldObj.getWorldTime()) {
+            _lastTickInjected = worldObj.getWorldTime();
+            _mjLastTick = 0;
+        }
 
-	@Override
-	public void doWork(PowerHandler handler)
-	{
-	}
+        float consumed = _powerProvider.useEnergy(0, _powerProvider.getEnergyStored(), false);
+        float energyToUse = consumed * PowerConverterCore.powerSystemBuildCraft.getInternalEnergyPerInput();
+        float leftOvers = (float) storeEnergy(energyToUse);
 
-    /*
-	public int powerRequest(ForgeDirection from)
-	{
-		return getTotalEnergyDemand() / PowerConverterCore.powerSystemBuildCraft.getInternalEnergyPerInput();
-	}
-	*/
+        float finalConsumption = consumed - (leftOvers * PowerConverterCore.powerSystemBuildCraft.getInternalEnergyPerInput());
+        if (finalConsumption > 0) {
+            _powerProvider.useEnergy(0, finalConsumption, true);
+            _mjLastTick = (int) finalConsumption;
+        }
+    }
 
-	@Override
-	public double getInputRate()
-	{
-		return _mjLastTick;
-	}
+    @Override
+    public PowerReceiver getPowerReceiver(ForgeDirection dir) {
+        return _powerProvider.getPowerReceiver();
+    }
+
+    @Override
+    public void doWork(PowerHandler handler) {
+    }
+
+    @Override
+    public double getInputRate() {
+        return _mjLastTick;
+    }
 
     @Override
     public World getWorld() {
@@ -88,7 +75,22 @@ public class TileEntityBuildCraftConsumer extends TileEntityEnergyConsumer<IPowe
     }
 
     @Override
-    public boolean canEmitPowerFrom(ForgeDirection direction) {
-        return true;
+    public boolean isActive() {
+        return false;
+    }
+
+    @Override
+    public boolean manageFluids() {
+        return false;
+    }
+
+    @Override
+    public boolean manageSolids() {
+        return false;
+    }
+
+    @Override
+    public boolean allowAction(IAction iAction) {
+        return false;
     }
 }

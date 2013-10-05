@@ -2,7 +2,6 @@ package powercrystals.powerconverters.power.ue;
 
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.ForgeDirection;
-
 import powercrystals.powerconverters.PowerConverterCore;
 import powercrystals.powerconverters.power.TileEntityEnergyProducer;
 import universalelectricity.core.block.IConductor;
@@ -10,27 +9,24 @@ import universalelectricity.core.block.IConnector;
 import universalelectricity.core.block.IElectrical;
 import universalelectricity.core.electricity.ElectricityPack;
 
-public class TileEntityUniversalElectricityProducer extends TileEntityEnergyProducer<IConductor> implements IConnector, IElectrical
-{
+public class TileEntityUniversalElectricityProducer extends TileEntityEnergyProducer<IConductor> implements IConnector, IElectrical {
     private float energy;
 
-	public TileEntityUniversalElectricityProducer()
-	{
-		this(0);
-	}
-	
-	public TileEntityUniversalElectricityProducer(int voltageIndex)
-	{
-		super(PowerConverterCore.powerSystemUniversalElectricity, voltageIndex, IConductor.class);
-	}
+    @SuppressWarnings("unused")
+    public TileEntityUniversalElectricityProducer() {
+        this(0);
+    }
 
-	@Override
-	public double produceEnergy(double energy)
-	{
-		double watts = energy / PowerConverterCore.powerSystemUniversalElectricity.getInternalEnergyPerOutput();
-		//ElectricityPack powerRemaining = ElectricityNetworkHelper.produceFromMultipleSides(this, new ElectricityPack((float) (watts / getVoltage()), (float) getVoltage()));
-		this.energy = MathHelper.floor_double(watts * PowerConverterCore.powerSystemUniversalElectricity.getInternalEnergyPerOutput());
-	    return (int) this.energy;
+    public TileEntityUniversalElectricityProducer(int voltageIndex) {
+        super(PowerConverterCore.powerSystemUniversalElectricity, voltageIndex, IConductor.class);
+    }
+
+    @Override
+    public double produceEnergy(double energy) {
+        double watts = energy / PowerConverterCore.powerSystemUniversalElectricity.getInternalEnergyPerOutput();
+        //ElectricityPack powerRemaining = ElectricityNetworkHelper.produceFromMultipleSides(this, new ElectricityPack((float) (watts / getVoltage()), (float) getVoltage()));
+        this.energy = MathHelper.floor_double(watts * PowerConverterCore.powerSystemUniversalElectricity.getInternalEnergyPerOutput());
+        return (int) this.energy;
     }
 
     /**
@@ -52,8 +48,6 @@ public class TileEntityUniversalElectricityProducer extends TileEntityEnergyProd
      * should always return null if the block cannot be externally discharged.
      *
      * @param from      Orientation the electricity is requested from.
-     * @param energy    Maximum amount of energy to be sent into the block.
-     * @param doReceive If false, the charge will only be simulated.
      * @return Amount of energy that was given out by the block.
      */
     @Override
@@ -86,14 +80,12 @@ public class TileEntityUniversalElectricityProducer extends TileEntityEnergyProd
     }
 
     @Override
-	public float getVoltage()
-	{
-		return getPowerSystem().getVoltageValues()[getVoltageIndex()];
-	}
+    public float getVoltage() {
+        return getPowerSystem().getVoltageValues()[getVoltageIndex()];
+    }
 
-	@Override
-	public boolean canConnect(ForgeDirection direction)
-	{
-		return true;
-	}
+    @Override
+    public boolean canConnect(ForgeDirection direction) {
+        return true;
+    }
 }
