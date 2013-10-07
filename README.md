@@ -11,7 +11,7 @@ Installation
   * [MinecraftForge Download](http://files.minecraftforge.net/ "Download MinecraftForge")
   * [PowerCrystals' Core Download](http://bit.ly/15MF99D "Download PowerCrystals' Core")
 2. Download a PowerConverters build as provided in the download link
-  * [Minefactory Reloaded Download](http://bit.ly/16sRGNc "Download Power Converters")
+  * [Power Converters Download](http://bit.ly/16sRGNc "Download Power Converters")
 3. Place the zip file you downloaded in your mods folder
 
 Contact
