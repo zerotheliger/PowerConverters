@@ -1,14 +1,17 @@
 package powercrystals.powerconverters.power.railcraft;
 
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fluids.FluidContainerRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.IFluidContainerItem;
+import buildcraft.api.transport.IPipeConnection;
+import buildcraft.api.transport.IPipeTile;
+import cpw.mods.fml.common.Optional;
+import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.fluids.*;
+import powercrystals.core.util.mods.InterfaceReference;
+import powercrystals.core.util.mods.ModIDReference;
 import powercrystals.powerconverters.PowerConverterCore;
 import powercrystals.powerconverters.power.TileEntityEnergyConsumer;
 
-public class TileEntityRailCraftConsumer extends TileEntityEnergyConsumer<IFluidContainerItem> implements IFluidContainerItem {
+@Optional.Interface(modid = ModIDReference.BUILDCRAFT, iface = InterfaceReference.BuildCraft.IPipeConnection)
+public class TileEntityRailCraftConsumer extends TileEntityEnergyConsumer<IFluidContainerItem> implements IFluidHandler, IPipeConnection {
     private FluidTank _steamTank;
     private int _mBLastTick;
 
@@ -21,7 +24,7 @@ public class TileEntityRailCraftConsumer extends TileEntityEnergyConsumer<IFluid
     public void updateEntity() {
         super.updateEntity();
 
-        if (_steamTank != null && _steamTank.getFluid() != null) {
+        if (_steamTank.getFluidAmount() > 0) {
             int amount = Math.min(_steamTank.getFluidAmount(), PowerConverterCore.throttleSteamConsumer.getInt());
             int energy = amount * PowerConverterCore.powerSystemSteam.getInternalEnergyPerInput();
             energy = (int) storeEnergy(energy);
@@ -39,27 +42,47 @@ public class TileEntityRailCraftConsumer extends TileEntityEnergyConsumer<IFluid
     }
 
     @Override
-    public int fill(ItemStack container, FluidStack resource, boolean doFill) {
-        return _steamTank.fill(resource, doFill);
+    public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
+        if (resource.getFluid().getName().equalsIgnoreCase("steam"))
+            return _steamTank.fill(resource, doFill);
+        return 0;
     }
 
     @Override
-    public FluidStack drain(ItemStack container, int maxDrain, boolean doDrain) {
+    public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
         return null;
     }
 
     @Override
-    public int getCapacity(ItemStack container) {
-        return _steamTank.getCapacity();
+    public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
+        return null;
     }
 
     @Override
-    public FluidStack getFluid(ItemStack container) {
-        return _steamTank.getFluid();
+    public boolean canFill(ForgeDirection from, Fluid fluid) {
+        return true;
+    }
+
+    @Override
+    public boolean canDrain(ForgeDirection from, Fluid fluid) {
+        return false;
+    }
+
+    @Override
+    public FluidTankInfo[] getTankInfo(ForgeDirection from) {
+        return new FluidTankInfo[] { _steamTank.getInfo() };
     }
 
     @Override
     public double getInputRate() {
         return _mBLastTick;
+    }
+
+    @Override
+    @Optional.Method(modid = ModIDReference.BUILDCRAFT)
+    public ConnectOverride overridePipeConnection(IPipeTile.PipeType pipeType, ForgeDirection direction) {
+        if (pipeType == IPipeTile.PipeType.FLUID)
+            return ConnectOverride.CONNECT;
+        return ConnectOverride.DISCONNECT;
     }
 }

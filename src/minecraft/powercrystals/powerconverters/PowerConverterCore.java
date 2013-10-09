@@ -17,8 +17,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.Property;
-import net.minecraftforge.event.ForgeSubscribe;
-import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import powercrystals.core.mod.BaseMod;
 import powercrystals.core.updater.UpdateManager;
@@ -78,8 +76,6 @@ public class PowerConverterCore extends BaseMod {
     public static PowerSystem powerSystemSteam;
     public static PowerSystem powerSystemUniversalElectricity;
     public static PowerSystem powerSystemFactorization;
-
-    public static int steamId = -1;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent evt) {
@@ -290,23 +286,8 @@ public class PowerConverterCore extends BaseMod {
         }
 
         NetworkRegistry.instance().registerGuiHandler(instance, new PCGUIHandler());
-
-        if (FluidRegistry.getFluid("Steam") != null) {
-            steamId = FluidRegistry.getFluidID("Steam");
-        }
-
         MinecraftForge.EVENT_BUS.register(instance);
-
         TickRegistry.registerScheduledTickHandler(new UpdateManager(this), Side.CLIENT);
-    }
-
-    @ForgeSubscribe
-    public void forgeEvent(FluidRegistry.FluidRegisterEvent e) {
-        if (e.fluidName.equals("Steam")) {
-            steamId = e.fluidID;
-        } else if (e.fluidName.equals("steam") && steamId <= 0) {
-            steamId = e.fluidID;
-        }
     }
 
     private static void loadConfig(Configuration c) {

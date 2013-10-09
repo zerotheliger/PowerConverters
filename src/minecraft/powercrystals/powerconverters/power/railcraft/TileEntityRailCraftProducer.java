@@ -1,61 +1,83 @@
 package powercrystals.powerconverters.power.railcraft;
 
-import net.minecraft.item.ItemStack;
+import buildcraft.api.transport.IPipeConnection;
+import buildcraft.api.transport.IPipeTile;
+import cpw.mods.fml.common.Optional;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
-import net.minecraftforge.fluids.IFluidContainerItem;
+import net.minecraftforge.fluids.*;
 import powercrystals.core.position.BlockPosition;
+import powercrystals.core.util.mods.InterfaceReference;
+import powercrystals.core.util.mods.ModIDReference;
 import powercrystals.powerconverters.PowerConverterCore;
 import powercrystals.powerconverters.power.TileEntityEnergyProducer;
 
-public class TileEntityRailCraftProducer extends TileEntityEnergyProducer<IFluidContainerItem> implements IFluidContainerItem {
-    private FluidTank _tank;
+@Optional.Interface(modid = ModIDReference.BUILDCRAFT, iface = InterfaceReference.BuildCraft.IPipeConnection)
+public class TileEntityRailCraftProducer extends TileEntityEnergyProducer<IFluidHandler> implements IFluidHandler, IPipeConnection {
 
     public TileEntityRailCraftProducer() {
-        super(PowerConverterCore.powerSystemSteam, 0, IFluidContainerItem.class);
-        _tank = new FluidTank(1);
+        super(PowerConverterCore.powerSystemSteam, 0, IFluidHandler.class);
     }
 
     @Override
     public double produceEnergy(double energy) {
-        double steam = Math.min(energy / PowerConverterCore.powerSystemSteam.getInternalEnergyPerOutput(), PowerConverterCore.throttleSteamProducer.getInt());
+        energy = energy / PowerConverterCore.powerSystemSteam.getInternalEnergyPerOutput();
         for (int i = 0; i < 6; i++) {
             BlockPosition bp = new BlockPosition(this);
             bp.orientation = ForgeDirection.getOrientation(i);
             bp.moveForwards(1);
             TileEntity te = worldObj.getBlockTileEntity(bp.x, bp.y, bp.z);
 
-            if (te != null && te instanceof IFluidContainerItem) {
-                steam -= ((IFluidContainerItem) te).fill(null, FluidRegistry.getFluidStack(FluidRegistry.getFluidName(PowerConverterCore.steamId), (int) steam), true);
+            if (te instanceof IFluidHandler) {
+                final int steam = (int) Math.min(energy, PowerConverterCore.throttleSteamProducer.getInt());
+                FluidStack stack = FluidRegistry.getFluidStack("steam", steam);
+                if (stack == null)
+                    FluidRegistry.getFluidStack("Steam", steam);
+                energy -= ((IFluidHandler) te).fill(bp.orientation.getOpposite(), stack, true);
             }
-            if (steam <= 0) {
+
+            if (energy <= 0)
                 return 0;
-            }
         }
 
-        return steam * PowerConverterCore.powerSystemSteam.getInternalEnergyPerOutput();
+        return energy * PowerConverterCore.powerSystemSteam.getInternalEnergyPerOutput();
     }
 
     @Override
-    public int fill(ItemStack container, FluidStack resource, boolean doFill) {
+    public int fill(ForgeDirection from, FluidStack resource, boolean doFill) {
         return 0;
     }
 
     @Override
-    public FluidStack drain(ItemStack container, int maxDrain, boolean doDrain) {
+    public FluidStack drain(ForgeDirection from, FluidStack resource, boolean doDrain) {
         return null;
     }
 
     @Override
-    public int getCapacity(ItemStack container) {
-        return _tank.getCapacity();
+    public FluidStack drain(ForgeDirection from, int maxDrain, boolean doDrain) {
+        return null;
     }
 
     @Override
-    public FluidStack getFluid(ItemStack container) {
-        return _tank.getFluid();
+    public boolean canFill(ForgeDirection from, Fluid fluid) {
+        return false;
+    }
+
+    @Override
+    public boolean canDrain(ForgeDirection from, Fluid fluid) {
+        return true;
+    }
+
+    @Override
+    public FluidTankInfo[] getTankInfo(ForgeDirection from) {
+        return new FluidTankInfo[0];
+    }
+
+    @Override
+    @Optional.Method(modid = ModIDReference.BUILDCRAFT)
+    public ConnectOverride overridePipeConnection(IPipeTile.PipeType pipeType, ForgeDirection direction) {
+        if (pipeType == IPipeTile.PipeType.FLUID)
+            return ConnectOverride.CONNECT;
+        return ConnectOverride.DISCONNECT;
     }
 }
