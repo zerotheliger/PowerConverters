@@ -4,11 +4,12 @@
   "name": "Power Converters",
   "description": "Take control of your power",
   "version": "2.2.0",
-  "mcversion": "1.4.6",
-  "url": "http://www.minecraftforum.net/topic/1629898-",
+  "mcversion": "1.6.4",
+  "url": "http://www.minecraftforum.net/topic/1695968-",
   "updateUrl": "",
   "authors": [
-    "PowerCrystals"
+    "PowerCrystals",
+    "samrg472"
   ],
   "credits": "",
   "logoFile": "",

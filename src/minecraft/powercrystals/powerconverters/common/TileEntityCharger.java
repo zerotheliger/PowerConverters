@@ -4,9 +4,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeDirection;
-import powercrystals.core.inventory.IInventoryManager;
-import powercrystals.core.inventory.InventoryManager;
 import powercrystals.powerconverters.PowerConverterCore;
+import powercrystals.powerconverters.inventory.IInventoryManager;
+import powercrystals.powerconverters.inventory.InventoryManager;
 import powercrystals.powerconverters.power.PowerSystem;
 import powercrystals.powerconverters.power.TileEntityEnergyProducer;
 

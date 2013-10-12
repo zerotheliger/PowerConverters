@@ -4,11 +4,11 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.ForgeDirection;
 import org.lwjgl.opengl.GL11;
-import powercrystals.core.render.ExposedGuiContainer;
-import powercrystals.core.render.RenderUtility;
 import powercrystals.powerconverters.PowerConverterCore;
 import powercrystals.powerconverters.common.BridgeSideData;
 import powercrystals.powerconverters.common.TileEntityEnergyBridge;
+import powercrystals.powerconverters.renderer.ExposedGuiContainer;
+import powercrystals.powerconverters.renderer.RenderUtility;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;

@@ -12,9 +12,9 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import powercrystals.core.position.INeighboorUpdateTile;
 import powercrystals.powerconverters.PowerConverterCore;
 import powercrystals.powerconverters.gui.PCCreativeTab;
+import powercrystals.powerconverters.position.INeighboorUpdateTile;
 import powercrystals.powerconverters.power.TileEntityBridgeComponent;
 
 public class BlockPowerConverterCommon extends BlockContainer {

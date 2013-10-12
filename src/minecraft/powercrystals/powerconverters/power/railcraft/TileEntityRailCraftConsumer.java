@@ -5,9 +5,9 @@ import buildcraft.api.transport.IPipeTile;
 import cpw.mods.fml.common.Optional;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.*;
-import powercrystals.core.util.mods.InterfaceReference;
-import powercrystals.core.util.mods.ModIDReference;
 import powercrystals.powerconverters.PowerConverterCore;
+import powercrystals.powerconverters.mods.InterfaceReference;
+import powercrystals.powerconverters.mods.ModIDReference;
 import powercrystals.powerconverters.power.TileEntityEnergyConsumer;
 
 @Optional.Interface(modid = ModIDReference.BUILDCRAFT, iface = InterfaceReference.BuildCraft.IPipeConnection)

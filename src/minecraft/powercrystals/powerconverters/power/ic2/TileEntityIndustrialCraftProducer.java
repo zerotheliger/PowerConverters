@@ -7,9 +7,9 @@ import ic2.api.energy.tile.IEnergySink;
 import ic2.api.energy.tile.IEnergyTile;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
-import powercrystals.core.position.BlockPosition;
 import powercrystals.powerconverters.PowerConverterCore;
 import powercrystals.powerconverters.common.TileEntityEnergyBridge;
+import powercrystals.powerconverters.position.BlockPosition;
 import powercrystals.powerconverters.power.TileEntityEnergyProducer;
 
 import java.util.List;

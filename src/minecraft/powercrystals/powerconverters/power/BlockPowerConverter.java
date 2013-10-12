@@ -9,9 +9,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import powercrystals.core.position.INeighboorUpdateTile;
 import powercrystals.powerconverters.PowerConverterCore;
 import powercrystals.powerconverters.common.TileEntityEnergyBridge;
+import powercrystals.powerconverters.position.INeighboorUpdateTile;
 
 public class BlockPowerConverter extends BlockContainer {
     protected Icon[] _icons;

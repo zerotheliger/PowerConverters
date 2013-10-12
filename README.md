@@ -3,13 +3,13 @@ PowerConverters
 
 Information
 --
-See [PowerCrystals' Original Topic](http://www.minecraftforum.net/topic/1629898) for more information. Remember to use the issue tracker to report issues, bugs, crashes, suggestions, etc..
+See [PowerCrystals' Original Topic](http://www.minecraftforum.net/topic/1629898-) for more information. Remember to use the issue tracker to report issues, bugs, crashes, suggestions, etc..
+<br />See [samrg472's topic](http://www.minecraftforum.net/topic/1695968-) for other information about news and updates.
 
 Installation
 --
-1. Make sure you have MinecraftForge and PowerCrystals' Core installed
+1. Make sure you have MinecraftForge installed
   * [MinecraftForge Download](http://files.minecraftforge.net/ "Download MinecraftForge")
-  * [PowerCrystals' Core Download](http://bit.ly/15MF99D "Download PowerCrystals' Core")
 2. Download a PowerConverters build as provided in the download link
   * [Power Converters Download](http://bit.ly/16sRGNc "Download Power Converters")
 3. Place the zip file you downloaded in your mods folder

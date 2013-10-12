@@ -9,8 +9,6 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
-import cpw.mods.fml.common.registry.TickRegistry;
-import cpw.mods.fml.relauncher.Side;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -18,8 +16,6 @@ import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.Property;
 import net.minecraftforge.oredict.ShapedOreRecipe;
-import powercrystals.core.mod.BaseMod;
-import powercrystals.core.updater.UpdateManager;
 import powercrystals.powerconverters.common.BlockPowerConverterCommon;
 import powercrystals.powerconverters.common.ItemBlockPowerConverterCommon;
 import powercrystals.powerconverters.common.TileEntityCharger;
@@ -38,10 +34,12 @@ import powercrystals.powerconverters.power.railcraft.TileEntityRailCraftConsumer
 import powercrystals.powerconverters.power.railcraft.TileEntityRailCraftProducer;
 import powercrystals.powerconverters.power.ue.*;
 
+import java.io.File;
+
 @Mod(modid = PowerConverterCore.modId, name = PowerConverterCore.modName, version = PowerConverterCore.version,
-        dependencies = "required-after:PowerCrystalsCore;after:BuildCraft|Energy;after:factorization;after:IC2;after:Railcraft;after:ThermalExpansion")
+        dependencies = "after:BuildCraft|Energy;after:factorization;after:IC2;after:Railcraft;after:ThermalExpansion")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false)
-public class PowerConverterCore extends BaseMod {
+public class PowerConverterCore {
     public static final String modId = "PowerConverters";
     public static final String modName = "Power Converters";
     public static final String version = "1.6.4R2.3.2B1";
@@ -91,8 +89,7 @@ public class PowerConverterCore extends BaseMod {
         PowerSystem.registerPowerSystem(powerSystemUniversalElectricity);
         PowerSystem.registerPowerSystem(powerSystemFactorization);
 
-        setConfigFolderBase(evt.getModConfigurationDirectory());
-        Configuration c = new Configuration(getCommonConfig());
+        Configuration c = new Configuration(new File(evt.getModConfigurationDirectory(), "common.cfg"));
         loadConfig(c);
     }
 
@@ -287,7 +284,6 @@ public class PowerConverterCore extends BaseMod {
 
         NetworkRegistry.instance().registerGuiHandler(instance, new PCGUIHandler());
         MinecraftForge.EVENT_BUS.register(instance);
-        TickRegistry.registerScheduledTickHandler(new UpdateManager(this), Side.CLIENT);
     }
 
     private static void loadConfig(Configuration c) {
@@ -308,20 +304,5 @@ public class PowerConverterCore extends BaseMod {
         PowerSystem.loadConfig(c);
 
         c.save();
-    }
-
-    @Override
-    public String getModId() {
-        return modId;
-    }
-
-    @Override
-    public String getModName() {
-        return modName;
-    }
-
-    @Override
-    public String getModVersion() {
-        return version;
     }
 }

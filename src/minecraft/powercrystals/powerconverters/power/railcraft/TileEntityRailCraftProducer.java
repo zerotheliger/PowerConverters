@@ -6,10 +6,10 @@ import cpw.mods.fml.common.Optional;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.*;
-import powercrystals.core.position.BlockPosition;
-import powercrystals.core.util.mods.InterfaceReference;
-import powercrystals.core.util.mods.ModIDReference;
 import powercrystals.powerconverters.PowerConverterCore;
+import powercrystals.powerconverters.mods.InterfaceReference;
+import powercrystals.powerconverters.mods.ModIDReference;
+import powercrystals.powerconverters.position.BlockPosition;
 import powercrystals.powerconverters.power.TileEntityEnergyProducer;
 
 @Optional.Interface(modid = ModIDReference.BUILDCRAFT, iface = InterfaceReference.BuildCraft.IPipeConnection)

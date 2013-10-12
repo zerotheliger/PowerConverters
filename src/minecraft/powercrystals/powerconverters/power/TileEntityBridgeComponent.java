@@ -3,9 +3,9 @@ package powercrystals.powerconverters.power;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import powercrystals.core.position.BlockPosition;
-import powercrystals.core.position.INeighboorUpdateTile;
 import powercrystals.powerconverters.common.TileEntityEnergyBridge;
+import powercrystals.powerconverters.position.BlockPosition;
+import powercrystals.powerconverters.position.INeighboorUpdateTile;
 
 import java.util.HashMap;
 import java.util.Map;
