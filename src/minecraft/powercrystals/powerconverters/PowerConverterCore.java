@@ -8,7 +8,6 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.LanguageRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -89,7 +88,9 @@ public class PowerConverterCore {
         PowerSystem.registerPowerSystem(powerSystemUniversalElectricity);
         PowerSystem.registerPowerSystem(powerSystemFactorization);
 
-        loadConfig(evt.getModConfigurationDirectory());
+        File dir = evt.getModConfigurationDirectory();
+        loadConfig(dir);
+        new LangHandler(modId, new File(new File(dir, modId.toLowerCase()), "lang")).init();
     }
 
     @EventHandler
@@ -98,8 +99,6 @@ public class PowerConverterCore {
         GameRegistry.registerBlock(converterBlockCommon, ItemBlockPowerConverterCommon.class, converterBlockCommon.getUnlocalizedName());
         GameRegistry.registerTileEntity(TileEntityEnergyBridge.class, "powerConverterEnergyBridge");
         GameRegistry.registerTileEntity(TileEntityCharger.class, "powerConverterUniversalCharger");
-        LanguageRegistry.addName(new ItemStack(converterBlockCommon, 1, 0), "Energy Bridge");
-        LanguageRegistry.addName(new ItemStack(converterBlockCommon, 1, 2), "Universal Charger");
 
         GameRegistry.addRecipe(new ItemStack(converterBlockCommon, 1, 0),
                 "GRG", "LDL", "GRG",
@@ -120,8 +119,6 @@ public class PowerConverterCore {
             GameRegistry.registerBlock(converterBlockBuildCraft, ItemBlockPowerConverterBuildCraft.class, converterBlockBuildCraft.getUnlocalizedName());
             GameRegistry.registerTileEntity(TileEntityBuildCraftConsumer.class, "powerConverterBCConsumer");
             GameRegistry.registerTileEntity(TileEntityBuildCraftProducer.class, "powerConverterBCProducer");
-            LanguageRegistry.addName(new ItemStack(converterBlockBuildCraft, 1, 0), "BC Consumer");
-            LanguageRegistry.addName(new ItemStack(converterBlockBuildCraft, 1, 1), "BC Producer");
 
             if (Loader.isModLoaded("BuildCraft|Energy")) {
                 GameRegistry.addRecipe(new ItemStack(converterBlockBuildCraft, 1, 0),
@@ -146,14 +143,6 @@ public class PowerConverterCore {
             GameRegistry.registerBlock(converterBlockIndustrialCraft, ItemBlockPowerConverterIndustrialCraft.class, converterBlockIndustrialCraft.getUnlocalizedName());
             GameRegistry.registerTileEntity(TileEntityIndustrialCraftConsumer.class, "powerConverterIC2Consumer");
             GameRegistry.registerTileEntity(TileEntityIndustrialCraftProducer.class, "powerConverterIC2Producer");
-            LanguageRegistry.addName(new ItemStack(converterBlockIndustrialCraft, 1, 0), "IC2 LV Consumer");
-            LanguageRegistry.addName(new ItemStack(converterBlockIndustrialCraft, 1, 1), "IC2 LV Producer");
-            LanguageRegistry.addName(new ItemStack(converterBlockIndustrialCraft, 1, 2), "IC2 MV Consumer");
-            LanguageRegistry.addName(new ItemStack(converterBlockIndustrialCraft, 1, 3), "IC2 MV Producer");
-            LanguageRegistry.addName(new ItemStack(converterBlockIndustrialCraft, 1, 4), "IC2 HV Consumer");
-            LanguageRegistry.addName(new ItemStack(converterBlockIndustrialCraft, 1, 5), "IC2 HV Producer");
-            LanguageRegistry.addName(new ItemStack(converterBlockIndustrialCraft, 1, 6), "IC2 EV Consumer");
-            LanguageRegistry.addName(new ItemStack(converterBlockIndustrialCraft, 1, 7), "IC2 EV Producer");
 
             GameRegistry.addRecipe(new ItemStack(converterBlockIndustrialCraft, 1, 0),
                     "G G", " T ", "G G",
@@ -189,8 +178,6 @@ public class PowerConverterCore {
             GameRegistry.registerBlock(converterBlockSteam, ItemBlockPowerConverterRailCraft.class, converterBlockSteam.getUnlocalizedName());
             GameRegistry.registerTileEntity(TileEntityRailCraftConsumer.class, "powerConverterSteamConsumer");
             GameRegistry.registerTileEntity(TileEntityRailCraftProducer.class, "powerConverterSteamProducer");
-            LanguageRegistry.addName(new ItemStack(converterBlockSteam, 1, 0), "Steam Consumer");
-            LanguageRegistry.addName(new ItemStack(converterBlockSteam, 1, 1), "Steam Producer");
 
             if (Loader.isModLoaded("Railcraft")) {
                 GameRegistry.addRecipe(new ItemStack(converterBlockSteam, 1, 0),
@@ -219,14 +206,6 @@ public class PowerConverterCore {
                 GameRegistry.registerBlock(converterBlockUniversalElectricity, ItemBlockPowerConverterUniversalElectricty.class, converterBlockUniversalElectricity.getUnlocalizedName());
                 GameRegistry.registerTileEntity(TileEntityUniversalElectricityConsumer.class, "powerConverterUEConsumer");
                 GameRegistry.registerTileEntity(TileEntityUniversalElectricityProducer.class, "powerConverterUEProducer");
-                LanguageRegistry.addName(new ItemStack(converterBlockUniversalElectricity, 1, 0), "UE 60V Consumer");
-                LanguageRegistry.addName(new ItemStack(converterBlockUniversalElectricity, 1, 1), "UE 60V Producer");
-                LanguageRegistry.addName(new ItemStack(converterBlockUniversalElectricity, 1, 2), "UE 120V Consumer");
-                LanguageRegistry.addName(new ItemStack(converterBlockUniversalElectricity, 1, 3), "UE 120V Producer");
-                LanguageRegistry.addName(new ItemStack(converterBlockUniversalElectricity, 1, 4), "UE 240V Consumer");
-                LanguageRegistry.addName(new ItemStack(converterBlockUniversalElectricity, 1, 5), "UE 240V Producer");
-                LanguageRegistry.addName(new ItemStack(converterBlockUniversalElectricity, 1, 6), "UE 480V Consumer");
-                LanguageRegistry.addName(new ItemStack(converterBlockUniversalElectricity, 1, 7), "UE 480V Producer");
 
                 GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(converterBlockUniversalElectricity, 1, 0),
                         "I I", "   ", "IBI",
@@ -265,10 +244,7 @@ public class PowerConverterCore {
             converterBlockFactorization = new BlockPowerConverterFactorization(blockIdFactorization.getInt());
             GameRegistry.registerBlock(converterBlockFactorization, ItemBlockPowerConverterFactorization.class, converterBlockFactorization.getUnlocalizedName());
             GameRegistry.registerTileEntity(TileEntityPowerConverterFactorizationConsumer.class, "powerConverterFZConsumer");
-            LanguageRegistry.addName(new ItemStack(converterBlockFactorization, 1, 0), "Factorization Consumer");
-
             GameRegistry.registerTileEntity(TileEntityPowerConverterFactorizationProducer.class, "powerConverterFZProducer");
-            LanguageRegistry.addName(new ItemStack(converterBlockFactorization, 1, 1), "Factorization Producer");
 
             Object fzRegistry = Class.forName("factorization.common.Core").getField("registry").get(null);
 
