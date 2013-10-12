@@ -89,8 +89,7 @@ public class PowerConverterCore {
         PowerSystem.registerPowerSystem(powerSystemUniversalElectricity);
         PowerSystem.registerPowerSystem(powerSystemFactorization);
 
-        Configuration c = new Configuration(new File(evt.getModConfigurationDirectory(), "common.cfg"));
-        loadConfig(c);
+        loadConfig(evt.getModConfigurationDirectory());
     }
 
     @EventHandler
@@ -286,7 +285,10 @@ public class PowerConverterCore {
         MinecraftForge.EVENT_BUS.register(instance);
     }
 
-    private static void loadConfig(Configuration c) {
+    private static void loadConfig(File dir) {
+        dir = new File(new File(dir, modId.toLowerCase()), "common.cfg");
+        Configuration c = new Configuration(dir);
+
         blockIdCommon = c.getBlock("ID.BlockCommon", 2850);
         blockIdBuildCraft = c.getBlock("ID.BlockBuildcraft", 2851);
         blockIdIndustrialCraft = c.getBlock("ID.BlockIndustrialCraft", 2852);

@@ -3,16 +3,12 @@ package powercrystals.powerconverters.common;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.ForgeDirection;
 import powercrystals.powerconverters.PowerConverterCore;
-import powercrystals.powerconverters.inventory.IInventoryManager;
-import powercrystals.powerconverters.inventory.InventoryManager;
 import powercrystals.powerconverters.power.PowerSystem;
 import powercrystals.powerconverters.power.TileEntityEnergyProducer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map.Entry;
 
 public class TileEntityCharger extends TileEntityEnergyProducer<IInventory> {
     private static List<IChargeHandler> _chargeHandlers = new ArrayList<IChargeHandler>();
@@ -29,40 +25,34 @@ public class TileEntityCharger extends TileEntityEnergyProducer<IInventory> {
     @Override
     public void updateEntity() {
         super.updateEntity();
-        if (_player != null && _player.getDistance(xCoord, yCoord, zCoord) > 2D) {
+        if (_player != null && _player.getDistance(xCoord, yCoord, zCoord) > 2D)
             setPlayer(null);
-        }
     }
 
     @Override
     public double produceEnergy(double energy) {
-        if (energy == 0) {
+        if (energy == 0)
             return 0;
-        }
 
         int energyRemaining = (int) energy;
-        if (_player != null) {
-            energyRemaining = chargeInventory(_player.inventory, ForgeDirection.UNKNOWN, energyRemaining);
-        }
+        if (_player != null)
+            energyRemaining = chargeInventory(_player.inventory, energyRemaining);
 
-        for (Entry<ForgeDirection, IInventory> inv : getTiles().entrySet()) {
-            energyRemaining = chargeInventory(inv.getValue(), inv.getKey(), energyRemaining);
-        }
+        for (IInventory inv : getTiles().values())
+            energyRemaining = chargeInventory(inv, energyRemaining);
 
         return energyRemaining;
     }
 
-    private int chargeInventory(IInventory inventory, ForgeDirection toSide, int energy) {
+    private int chargeInventory(IInventory inventory, int energy) {
         PowerSystem nextPowerSystem = getPowerSystem();
         int energyRemaining = energy;
 
-        IInventoryManager inv = InventoryManager.create(inventory, toSide.getOpposite());
-        for (Entry<Integer, ItemStack> contents : inv.getContents().entrySet()) {
+        for (int i = 0; i < inventory.getSizeInventory(); i++) {
             for (IChargeHandler chargeHandler : _chargeHandlers) {
-                ItemStack s = contents.getValue();
-                if (s == null) {
+                ItemStack s = inventory.getStackInSlot(i);
+                if (s == null)
                     continue;
-                }
 
                 if (chargeHandler.canHandle(s)) {
                     energyRemaining = chargeHandler.charge(s, energyRemaining);
@@ -73,7 +63,6 @@ public class TileEntityCharger extends TileEntityEnergyProducer<IInventory> {
                 }
             }
         }
-
         _powerSystem = nextPowerSystem;
         return energyRemaining;
     }
