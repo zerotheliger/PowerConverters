@@ -40,7 +40,8 @@ public class GuiEnergyBridge extends ExposedGuiContainer {
                 BridgeSideData data = _bridge.getDataForSide(dir);
                 if (data != null && data.powerSystem != null) {
                     String unit = data.powerSystem.getUnit();
-                    unit = unit.substring(0, unit.length() - 2);
+                    if (unit.length() > 2)
+                        unit = unit.substring(0, unit.length() - 2);
                     String toAdd = (_bridge.getEnergyStored() / data.powerSystem.getInternalEnergyPerOutput()) + " " + unit;
                     if (!tooltips.contains(toAdd))
                         tooltips.add(toAdd);
