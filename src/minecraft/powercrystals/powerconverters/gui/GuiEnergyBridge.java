@@ -34,7 +34,7 @@ public class GuiEnergyBridge extends ExposedGuiContainer {
             ArrayList<String> tooltips = new ArrayList<String>(ForgeDirection.VALID_DIRECTIONS.length);
             {
                 float percentage = 100F * (((float) _bridge.getEnergyStored()) / ((float) _bridge.getEnergyStoredMax()));
-                tooltips.add(format.format(percentage) + "% full");
+                tooltips.add(format.format(percentage) + "% " + StatCollector.translateToLocal("powerconverters.percentfull"));
             }
             for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
                 BridgeSideData data = _bridge.getDataForSide(dir);
@@ -53,18 +53,18 @@ public class GuiEnergyBridge extends ExposedGuiContainer {
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        fontRenderer.drawString("Energy Bridge", 8, 6, 4210752);
+        fontRenderer.drawString(StatCollector.translateToLocal("powerconverters.common.bridge.name"), 8, 6, 4210752);
 
         if (_bridge.isInputLimited()) {
-            fontRenderer.drawString("INPUT LIMITED", 98, 6, -1);
+            fontRenderer.drawString(StatCollector.translateToLocal("powerconverters.inputlimited"), 98, 6, -1);
         } else {
-            fontRenderer.drawString("OUTPUT LIMITED", 90, 6, -1);
+            fontRenderer.drawString(StatCollector.translateToLocal("powerconverters.outputlimited"), 90, 6, -1);
         }
 
         for (int i = 0; i < 6; i++) {
             ForgeDirection dir = ForgeDirection.getOrientation(i);
 
-            fontRenderer.drawString(dir.toString(), 10, 6 + 12 * (i + 1), -1);
+            fontRenderer.drawString(StatCollector.translateToLocal("powerconverters." + dir.toString().toLowerCase()), 10, 6 + 12 * (i + 1), -1);
             BridgeSideData data = _bridge.getDataForSide(dir);
 
             if ((data.isConsumer || data.isProducer) && data.powerSystem != null) {
@@ -73,10 +73,10 @@ public class GuiEnergyBridge extends ExposedGuiContainer {
                     name += " " + data.powerSystem.getVoltageNames()[data.voltageNameIndex];
                 }
                 fontRenderer.drawString(name, 49, 6 + 12 * (i + 1), -1);
-                fontRenderer.drawString(data.isConsumer ? "IN" : "OUT", 92, 6 + 12 * (i + 1), -1);
+                fontRenderer.drawString(data.isConsumer ? StatCollector.translateToLocal("powerconverters.in") : StatCollector.translateToLocal("powerconverters.out"), 92, 6 + 12 * (i + 1), -1);
                 fontRenderer.drawString(getOutputRateString(data), 119, 6 + 12 * (i + 1), -1);
             } else {
-                fontRenderer.drawString("<NONE>", 49, 6 + 12 * (i + 1), -1);
+                fontRenderer.drawString(StatCollector.translateToLocal("powerconverters.none"), 49, 6 + 12 * (i + 1), -1);
             }
         }
 
@@ -116,7 +116,7 @@ public class GuiEnergyBridge extends ExposedGuiContainer {
     }
 
     private String getOutputRateString(BridgeSideData data) {
-        if (!data.isConnected) return "NO LINK";
+        if (!data.isConnected) return StatCollector.translateToLocal("powerconverters.nolink");
         double rate = data.outputRate;
         if (rate > 1000) {
             double rateThousand = (rate / 1000.0);

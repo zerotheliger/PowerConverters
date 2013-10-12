@@ -1,3 +1,19 @@
+powerconverters.inputlimited = INPUT LIMITED
+powerconverters.outputlimited = OUTPUT LIMITED
+
+powerconverters.in = IN
+powerconverters.out = OUT
+powerconverters.none = <NONE>
+powerconverters.nolink = NO LINK
+powerconverters.percentfull = full
+
+powerconverters.up = UP
+powerconverters.down = DOWN
+powerconverters.south = SOUTH
+powerconverters.north = NORTH
+powerconverters.west = WEST
+powerconverters.east = EAST
+
 powerconverters.common.bridge.name = Energy Bridge
 powerconverters.common.charger.name = Universal Charger
 
