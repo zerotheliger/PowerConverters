@@ -35,13 +35,3 @@ powerconverters.ic2.lv.producer.name = IC2 LV Producer
 powerconverters.ic2.mv.producer.name = IC2 MV Producer
 powerconverters.ic2.hv.producer.name = IC2 HV Producer
 powerconverters.ic2.ev.producer.name = IC2 EV Producer
-
-powerconverters.ue.lv.consumer.name = UE 60V Consumer
-powerconverters.ue.mv.consumer.name = UE 120V Consumer
-powerconverters.ue.hv.consumer.name = UE 240V Consumer
-powerconverters.ue.ev.consumer.name = UE 480V Consumer
-
-powerconverters.ue.lv.producer.name = UE 60V Producer
-powerconverters.ue.mv.producer.name = UE 120V Producer
-powerconverters.ue.hv.producer.name = UE 240V Producer
-powerconverters.ue.ev.producer.name = UE 480V Producer

@@ -14,7 +14,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.Property;
-import net.minecraftforge.oredict.ShapedOreRecipe;
 import powercrystals.powerconverters.common.BlockPowerConverterCommon;
 import powercrystals.powerconverters.common.ItemBlockPowerConverterCommon;
 import powercrystals.powerconverters.common.TileEntityCharger;
@@ -31,7 +30,6 @@ import powercrystals.powerconverters.power.railcraft.BlockPowerConverterRailCraf
 import powercrystals.powerconverters.power.railcraft.ItemBlockPowerConverterRailCraft;
 import powercrystals.powerconverters.power.railcraft.TileEntityRailCraftConsumer;
 import powercrystals.powerconverters.power.railcraft.TileEntityRailCraftProducer;
-import powercrystals.powerconverters.power.ue.*;
 
 import java.io.File;
 
@@ -50,7 +48,6 @@ public class PowerConverterCore {
     public static Block converterBlockBuildCraft;
     public static Block converterBlockIndustrialCraft;
     public static Block converterBlockSteam;
-    public static Block converterBlockUniversalElectricity;
     public static Block converterBlockFactorization;
 
     @Mod.Instance(modId)
@@ -60,7 +57,6 @@ public class PowerConverterCore {
     private static Property blockIdBuildCraft;
     private static Property blockIdIndustrialCraft;
     private static Property blockIdSteam;
-    private static Property blockIdUniversalElectricty;
     private static Property blockIdFactorization;
 
     public static Property bridgeBufferSize;
@@ -71,7 +67,6 @@ public class PowerConverterCore {
     public static PowerSystem powerSystemBuildCraft;
     public static PowerSystem powerSystemIndustrialCraft;
     public static PowerSystem powerSystemSteam;
-    public static PowerSystem powerSystemUniversalElectricity;
     public static PowerSystem powerSystemFactorization;
 
     @EventHandler
@@ -79,13 +74,11 @@ public class PowerConverterCore {
         powerSystemBuildCraft = new PowerSystem("BuildCraft", "BC", 4375, 4375, null, null, "MJ/t");
         powerSystemIndustrialCraft = new PowerSystem("IndustrialCraft", "IC2", 1800, 1800, new String[]{"LV", "MV", "HV", "EV"}, new int[]{32, 128, 512, 2048}, "EU/t");
         powerSystemSteam = new PowerSystem("Steam", "STEAM", 875, 875, null, null, "mB/t");
-        powerSystemUniversalElectricity = new PowerSystem("UniversalElectricity", "UE", 10, 10, new String[]{"LV", "MV", "HV", "EV"}, new int[]{60, 120, 240, 480}, "W");
         powerSystemFactorization = new PowerSystem("Factorization", "FZ", 175, 175, null, null, "CG/t");
 
         PowerSystem.registerPowerSystem(powerSystemBuildCraft);
         PowerSystem.registerPowerSystem(powerSystemIndustrialCraft);
         PowerSystem.registerPowerSystem(powerSystemSteam);
-        PowerSystem.registerPowerSystem(powerSystemUniversalElectricity);
         PowerSystem.registerPowerSystem(powerSystemFactorization);
 
         File dir = evt.getModConfigurationDirectory();
@@ -196,50 +189,6 @@ public class PowerConverterCore {
             GameRegistry.addShapelessRecipe(new ItemStack(converterBlockSteam, 1, 0), new ItemStack(converterBlockSteam, 1, 1));
         }
 
-        if (Loader.isModLoaded("BasicComponents") || Loader.isModLoaded("mmmPowerSuits")) {
-            TileEntityCharger.registerChargeHandler(new ChargeHandlerUniversalElectricity());
-        }
-
-        try {
-            if (Class.forName("universalelectricity.core.UniversalElectricity") != null /*&& Class.forName("universalelectricity.core.UniversalElectricity").getField("isNetworkActive").getBoolean(null)*/) {
-                converterBlockUniversalElectricity = new BlockPowerConverterUniversalElectricity(blockIdUniversalElectricty.getInt());
-                GameRegistry.registerBlock(converterBlockUniversalElectricity, ItemBlockPowerConverterUniversalElectricty.class, converterBlockUniversalElectricity.getUnlocalizedName());
-                GameRegistry.registerTileEntity(TileEntityUniversalElectricityConsumer.class, "powerConverterUEConsumer");
-                GameRegistry.registerTileEntity(TileEntityUniversalElectricityProducer.class, "powerConverterUEProducer");
-
-                GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(converterBlockUniversalElectricity, 1, 0),
-                        "I I", "   ", "IBI",
-                        'I', Item.ingotGold,
-                        'B', "battery"));
-
-                GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(converterBlockUniversalElectricity, 1, 2),
-                        "I I", " B ", "I I",
-                        'I', Item.ingotGold,
-                        'B', "battery"));
-
-                GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(converterBlockUniversalElectricity, 1, 4),
-                        "IBI", "   ", "I I",
-                        'I', Item.ingotGold,
-                        'B', "battery"));
-
-                GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(converterBlockUniversalElectricity, 1, 6),
-                        "IBI", "I I", "I I",
-                        'I', Item.ingotGold,
-                        'B', "battery"));
-
-                GameRegistry.addShapelessRecipe(new ItemStack(converterBlockUniversalElectricity, 1, 1), new ItemStack(converterBlockUniversalElectricity, 1, 0));
-                GameRegistry.addShapelessRecipe(new ItemStack(converterBlockUniversalElectricity, 1, 0), new ItemStack(converterBlockUniversalElectricity, 1, 1));
-                GameRegistry.addShapelessRecipe(new ItemStack(converterBlockUniversalElectricity, 1, 3), new ItemStack(converterBlockUniversalElectricity, 1, 2));
-                GameRegistry.addShapelessRecipe(new ItemStack(converterBlockUniversalElectricity, 1, 2), new ItemStack(converterBlockUniversalElectricity, 1, 3));
-                GameRegistry.addShapelessRecipe(new ItemStack(converterBlockUniversalElectricity, 1, 5), new ItemStack(converterBlockUniversalElectricity, 1, 4));
-                GameRegistry.addShapelessRecipe(new ItemStack(converterBlockUniversalElectricity, 1, 4), new ItemStack(converterBlockUniversalElectricity, 1, 5));
-                GameRegistry.addShapelessRecipe(new ItemStack(converterBlockUniversalElectricity, 1, 7), new ItemStack(converterBlockUniversalElectricity, 1, 6));
-                GameRegistry.addShapelessRecipe(new ItemStack(converterBlockUniversalElectricity, 1, 6), new ItemStack(converterBlockUniversalElectricity, 1, 7));
-            }
-        } catch (Throwable t) {
-            t.printStackTrace();
-        }
-
         if (Loader.isModLoaded("factorization")) {
             converterBlockFactorization = new BlockPowerConverterFactorization(blockIdFactorization.getInt());
             GameRegistry.registerBlock(converterBlockFactorization, ItemBlockPowerConverterFactorization.class, converterBlockFactorization.getUnlocalizedName());
@@ -269,7 +218,6 @@ public class PowerConverterCore {
         blockIdBuildCraft = c.getBlock("ID.BlockBuildcraft", 2851);
         blockIdIndustrialCraft = c.getBlock("ID.BlockIndustrialCraft", 2852);
         blockIdSteam = c.getBlock("ID.BlockSteam", 2853);
-        blockIdUniversalElectricty = c.getBlock("ID.BlockUniversalElectricty", 2854);
         blockIdFactorization = c.getBlock("ID.BlockFactorization", 2855);
 
         bridgeBufferSize = c.get(Configuration.CATEGORY_GENERAL, "BridgeBufferSize", 160000000);
