@@ -31,7 +31,7 @@ public class RenderUtility {
         int yStart;
 
         for (String line : lines) {
-            tempWidth = container.fontRenderer.getStringWidth(line);
+            tempWidth = container.getFontRenderer().getStringWidth(line);
             if (tempWidth > tooltipWidth)
                 tooltipWidth = tempWidth;
         }
@@ -72,7 +72,7 @@ public class RenderUtility {
                 line = "\u00a77" + line;
             }
 
-            container.fontRenderer.drawStringWithShadow(line, xStart, yStart, -1);
+            container.getFontRenderer().drawStringWithShadow(line, xStart, yStart, -1);
 
             if (stringIndex == 0)
                 yStart += 2;

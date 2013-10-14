@@ -1,5 +1,6 @@
 package powercrystals.powerconverters.renderer;
 
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.inventory.Container;
@@ -29,5 +30,9 @@ public abstract class ExposedGuiContainer extends GuiContainer {
 
     public void setZLevel(float zLevel) {
         this.zLevel = zLevel;
+    }
+
+    public FontRenderer getFontRenderer() {
+        return fontRenderer;
     }
 }
