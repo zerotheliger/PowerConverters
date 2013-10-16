@@ -1,5 +1,6 @@
 package powercrystals.powerconverters.power.buildcraft;
 
+import buildcraft.api.power.IPowerEmitter;
 import buildcraft.api.power.IPowerReceptor;
 import buildcraft.api.power.PowerHandler;
 import buildcraft.api.power.PowerHandler.PowerReceiver;
@@ -11,7 +12,7 @@ import powercrystals.powerconverters.power.TileEntityEnergyProducer;
 
 import java.util.Map.Entry;
 
-public class TileEntityBuildCraftProducer extends TileEntityEnergyProducer<IPowerReceptor> implements IPipeConnection {
+public class TileEntityBuildCraftProducer extends TileEntityEnergyProducer<IPowerReceptor> implements IPipeConnection, IPowerEmitter {
 
     public TileEntityBuildCraftProducer() {
         super(PowerConverterCore.powerSystemBuildCraft, 0, IPowerReceptor.class);
@@ -38,6 +39,11 @@ public class TileEntityBuildCraftProducer extends TileEntityEnergyProducer<IPowe
 
     @Override
     public ConnectOverride overridePipeConnection(IPipeTile.PipeType pipeType, ForgeDirection direction) {
-        return pipeType == IPipeTile.PipeType.POWER ? ConnectOverride.DEFAULT : ConnectOverride.DISCONNECT;
+        return pipeType == IPipeTile.PipeType.POWER ? ConnectOverride.CONNECT : ConnectOverride.DISCONNECT;
+    }
+
+    @Override
+    public boolean canEmitPowerFrom(ForgeDirection direction) {
+        return true;
     }
 }
