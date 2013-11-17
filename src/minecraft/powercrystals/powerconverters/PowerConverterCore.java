@@ -119,6 +119,7 @@ public class PowerConverterCore {
                         'G', Item.ingotGold,
                         'E', new ItemStack((Block) (Class.forName("buildcraft.BuildCraftEnergy").getField("engineBlock").get(null)), 1, 1));
             }
+            /*
             if (Loader.isModLoaded("ThermalExpansion")) {
                 GameRegistry.addRecipe(new ItemStack(converterBlockBuildCraft, 1, 0),
                         "G G", " E ", "G G",
@@ -126,6 +127,7 @@ public class PowerConverterCore {
                         'E', new ItemStack((Block) (Class.forName("thermalexpansion.block.TEBlocks").getField("blockEngine").get(null)), 1, 1));
                 TileEntityCharger.registerChargeHandler(new ChargeHandlerThermalExpansion());
             }
+            */
 
             GameRegistry.addShapelessRecipe(new ItemStack(converterBlockBuildCraft, 1, 1), new ItemStack(converterBlockBuildCraft, 1, 0));
             GameRegistry.addShapelessRecipe(new ItemStack(converterBlockBuildCraft, 1, 0), new ItemStack(converterBlockBuildCraft, 1, 1));
