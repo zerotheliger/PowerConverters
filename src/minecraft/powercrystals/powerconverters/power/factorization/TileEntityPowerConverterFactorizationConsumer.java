@@ -30,7 +30,7 @@ public class TileEntityPowerConverterFactorizationConsumer extends TileEntityEne
         if (this._charge.getValue() > 0) {
             int used = _charge.tryTake(_charge.getValue());
             _chargeLastTick = MathHelper.floor_float(used);
-            storeEnergy((used * PowerConverterCore.powerSystemFactorization.getInternalEnergyPerInput()));
+            storeEnergy((used * PowerConverterCore.powerSystemFactorization.getInternalEnergyPerInput()), false);
         } else {
             this._chargeLastTick = 0;
         }

@@ -20,7 +20,10 @@ import powercrystals.powerconverters.common.TileEntityCharger;
 import powercrystals.powerconverters.common.TileEntityEnergyBridge;
 import powercrystals.powerconverters.gui.PCGUIHandler;
 import powercrystals.powerconverters.power.PowerSystem;
-import powercrystals.powerconverters.power.buildcraft.*;
+import powercrystals.powerconverters.power.buildcraft.BlockPowerConverterBuildCraft;
+import powercrystals.powerconverters.power.buildcraft.ItemBlockPowerConverterBuildCraft;
+import powercrystals.powerconverters.power.buildcraft.TileEntityBuildCraftConsumer;
+import powercrystals.powerconverters.power.buildcraft.TileEntityBuildCraftProducer;
 import powercrystals.powerconverters.power.factorization.BlockPowerConverterFactorization;
 import powercrystals.powerconverters.power.factorization.ItemBlockPowerConverterFactorization;
 import powercrystals.powerconverters.power.factorization.TileEntityPowerConverterFactorizationConsumer;
@@ -30,6 +33,8 @@ import powercrystals.powerconverters.power.railcraft.BlockPowerConverterRailCraf
 import powercrystals.powerconverters.power.railcraft.ItemBlockPowerConverterRailCraft;
 import powercrystals.powerconverters.power.railcraft.TileEntityRailCraftConsumer;
 import powercrystals.powerconverters.power.railcraft.TileEntityRailCraftProducer;
+import powercrystals.powerconverters.power.thermalexpansion.*;
+import thermalexpansion.block.TEBlocks;
 
 import java.io.File;
 
@@ -44,20 +49,22 @@ public class PowerConverterCore {
     public static final String texturesFolder = modId + ":";
     public static final String guiFolder = modId + ":" + "textures/gui/";
 
-    public static Block converterBlockCommon;
-    public static Block converterBlockBuildCraft;
+    public static Block converterBlockTE;
     public static Block converterBlockIndustrialCraft;
-    public static Block converterBlockSteam;
     public static Block converterBlockFactorization;
+    public static Block converterBlockBuildCraft;
+    public static Block converterBlockCommon;
+    public static Block converterBlockSteam;
 
     @Mod.Instance(modId)
     public static PowerConverterCore instance;
 
-    private static Property blockIdCommon;
-    private static Property blockIdBuildCraft;
+    private static Property blockIdThermalExpansion;
     private static Property blockIdIndustrialCraft;
-    private static Property blockIdSteam;
     private static Property blockIdFactorization;
+    private static Property blockIdBuildCraft;
+    private static Property blockIdCommon;
+    private static Property blockIdSteam;
 
     public static Property bridgeBufferSize;
 
@@ -68,6 +75,7 @@ public class PowerConverterCore {
     public static PowerSystem powerSystemIndustrialCraft;
     public static PowerSystem powerSystemSteam;
     public static PowerSystem powerSystemFactorization;
+    public static PowerSystem powerSystemThermalExpansion;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent evt) {
@@ -75,11 +83,13 @@ public class PowerConverterCore {
         powerSystemIndustrialCraft = new PowerSystem("IndustrialCraft", "IC2", 1800, 1800, new String[]{"LV", "MV", "HV", "EV"}, new int[]{32, 128, 512, 2048}, "EU/t");
         powerSystemSteam = new PowerSystem("Steam", "STEAM", 875, 875, null, null, "mB/t");
         powerSystemFactorization = new PowerSystem("Factorization", "FZ", 175, 175, null, null, "CG/t");
+        powerSystemThermalExpansion = new PowerSystem("Thermal Expansion", "RF", 438, 438, null, null, "RF/t");
 
         PowerSystem.registerPowerSystem(powerSystemBuildCraft);
         PowerSystem.registerPowerSystem(powerSystemIndustrialCraft);
         PowerSystem.registerPowerSystem(powerSystemSteam);
         PowerSystem.registerPowerSystem(powerSystemFactorization);
+        PowerSystem.registerPowerSystem(powerSystemThermalExpansion);
 
         File dir = evt.getModConfigurationDirectory();
         loadConfig(dir);
@@ -119,15 +129,6 @@ public class PowerConverterCore {
                         'G', Item.ingotGold,
                         'E', new ItemStack((Block) (Class.forName("buildcraft.BuildCraftEnergy").getField("engineBlock").get(null)), 1, 1));
             }
-            /*
-            if (Loader.isModLoaded("ThermalExpansion")) {
-                GameRegistry.addRecipe(new ItemStack(converterBlockBuildCraft, 1, 0),
-                        "G G", " E ", "G G",
-                        'G', Item.ingotGold,
-                        'E', new ItemStack((Block) (Class.forName("thermalexpansion.block.TEBlocks").getField("blockEngine").get(null)), 1, 1));
-                TileEntityCharger.registerChargeHandler(new ChargeHandlerThermalExpansion());
-            }
-            */
 
             GameRegistry.addShapelessRecipe(new ItemStack(converterBlockBuildCraft, 1, 1), new ItemStack(converterBlockBuildCraft, 1, 0));
             GameRegistry.addShapelessRecipe(new ItemStack(converterBlockBuildCraft, 1, 0), new ItemStack(converterBlockBuildCraft, 1, 1));
@@ -208,6 +209,22 @@ public class PowerConverterCore {
             GameRegistry.addShapelessRecipe(new ItemStack(converterBlockFactorization, 1, 0), new ItemStack(converterBlockFactorization, 1, 1));
         }
 
+        if (Loader.isModLoaded("ThermalExpansion")) {
+            converterBlockTE = new BlockPowerConverterRF(blockIdThermalExpansion.getInt());
+            GameRegistry.registerBlock(converterBlockTE, ItemBlockPowerConverterRF.class, converterBlockTE.getUnlocalizedName());
+            GameRegistry.registerTileEntity(TileEntityRFConsumer.class, "powerConverterRFConsumer");
+            GameRegistry.registerTileEntity(TileEntityRFProducer.class, "powerConverterRFProducer");
+            TileEntityCharger.registerChargeHandler(new ChargeHandlerRF());
+
+            GameRegistry.addRecipe(new ItemStack(converterBlockTE, 1, 0),
+                    "G G", " T ", "G G",
+                    'G', Item.ingotGold,
+                    'T', TEBlocks.blockDynamo);
+
+            GameRegistry.addShapelessRecipe(new ItemStack(converterBlockTE, 1, 1), new ItemStack(converterBlockTE, 1, 0));
+            GameRegistry.addShapelessRecipe(new ItemStack(converterBlockTE, 1, 0), new ItemStack(converterBlockTE, 1, 1));
+        }
+
         NetworkRegistry.instance().registerGuiHandler(instance, new PCGUIHandler());
         MinecraftForge.EVENT_BUS.register(instance);
     }
@@ -220,7 +237,8 @@ public class PowerConverterCore {
         blockIdBuildCraft = c.getBlock("ID.BlockBuildcraft", 2851);
         blockIdIndustrialCraft = c.getBlock("ID.BlockIndustrialCraft", 2852);
         blockIdSteam = c.getBlock("ID.BlockSteam", 2853);
-        blockIdFactorization = c.getBlock("ID.BlockFactorization", 2855);
+        blockIdFactorization = c.getBlock("ID.BlockFactorization", 2854);
+        blockIdThermalExpansion = c.getBlock("ID.BlockThermalExpansion", 2855);
 
         bridgeBufferSize = c.get(Configuration.CATEGORY_GENERAL, "BridgeBufferSize", 160000000);
 

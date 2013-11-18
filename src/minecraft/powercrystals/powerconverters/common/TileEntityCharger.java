@@ -4,7 +4,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import powercrystals.powerconverters.PowerConverterCore;
-import powercrystals.powerconverters.power.PowerSystem;
 import powercrystals.powerconverters.power.TileEntityEnergyProducer;
 
 import java.util.ArrayList;
@@ -45,7 +44,6 @@ public class TileEntityCharger extends TileEntityEnergyProducer<IInventory> {
     }
 
     private int chargeInventory(IInventory inventory, int energy) {
-        PowerSystem nextPowerSystem = getPowerSystem();
         int energyRemaining = energy;
 
         for (int i = 0; i < inventory.getSizeInventory(); i++) {
@@ -57,13 +55,12 @@ public class TileEntityCharger extends TileEntityEnergyProducer<IInventory> {
                 if (chargeHandler.canHandle(s)) {
                     energyRemaining = chargeHandler.charge(s, energyRemaining);
                     if (energyRemaining < energy) {
-                        nextPowerSystem = chargeHandler.getPowerSystem();
+                        _powerSystem = chargeHandler.getPowerSystem();
                         energy = energyRemaining;
                     }
                 }
             }
         }
-        _powerSystem = nextPowerSystem;
         return energyRemaining;
     }
 

@@ -26,6 +26,9 @@ powerconverters.steam.producer.name = Steam Producer
 powerconverters.fz.consumer.name = Factorization Consumer
 powerconverters.fz.producer.name = Factorization Producer
 
+powerconverters.te.consumer.name = TE Consumer
+powerconverters.te.producer.name = TE Producer
+
 powerconverters.ic2.lv.consumer.name = IC2 LV Consumer
 powerconverters.ic2.mv.consumer.name = IC2 MV Consumer
 powerconverters.ic2.hv.consumer.name = IC2 HV Consumer

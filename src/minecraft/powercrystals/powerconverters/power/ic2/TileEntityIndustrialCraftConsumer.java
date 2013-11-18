@@ -80,7 +80,7 @@ public class TileEntityIndustrialCraftConsumer extends TileEntityEnergyConsumer<
             return amount;
         }
 
-        double pcuNotStored = storeEnergy(amount * PowerConverterCore.powerSystemIndustrialCraft.getInternalEnergyPerInput());
+        double pcuNotStored = storeEnergy(amount * PowerConverterCore.powerSystemIndustrialCraft.getInternalEnergyPerInput(), false);
         double euNotStored = pcuNotStored / PowerConverterCore.powerSystemIndustrialCraft.getInternalEnergyPerInput();
 
         double euThisInjection = (amount - euNotStored);

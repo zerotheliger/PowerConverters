@@ -10,9 +10,14 @@ public abstract class TileEntityEnergyConsumer<T> extends TileEntityBridgeCompon
         super(powerSystem, voltageNameIndex, adjacentClass);
     }
 
-    protected double storeEnergy(double energy) {
+    /**
+     * @param energy amount of energy to store
+     * @param simulate whether to actually store the energy
+     * @return energy left over
+     */
+    protected double storeEnergy(double energy, boolean simulate) {
         for (Entry<ForgeDirection, TileEntityEnergyBridge> bridge : getBridges().entrySet()) {
-            energy = bridge.getValue().storeEnergy(energy);
+            energy = bridge.getValue().storeEnergy(energy, simulate);
             if (energy <= 0) {
                 return 0;
             }

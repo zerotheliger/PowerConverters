@@ -27,7 +27,7 @@ public class TileEntityRailCraftConsumer extends TileEntityEnergyConsumer<IFluid
         if (_steamTank.getFluidAmount() > 0) {
             int amount = Math.min(_steamTank.getFluidAmount(), PowerConverterCore.throttleSteamConsumer.getInt());
             int energy = amount * PowerConverterCore.powerSystemSteam.getInternalEnergyPerInput();
-            energy = (int) storeEnergy(energy);
+            energy = (int) storeEnergy(energy, false);
             int toDrain = amount - (energy / PowerConverterCore.powerSystemSteam.getInternalEnergyPerInput());
             _steamTank.drain(toDrain, true);
             _mBLastTick = toDrain;

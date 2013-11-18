@@ -44,7 +44,7 @@ public class TileEntityBridgeComponent<T> extends TileEntity implements INeighbo
 
         for (ForgeDirection d : ForgeDirection.VALID_DIRECTIONS) {
             TileEntity te = BlockPosition.getAdjacentTileEntity(this, d);
-            if (te != null && te instanceof TileEntityEnergyBridge) {
+            if (te instanceof TileEntityEnergyBridge) {
                 adjacentBridges.put(d, (TileEntityEnergyBridge) te);
             } else if (te != null && _adjacentClass.isAssignableFrom(te.getClass())) {
                 adjacentTiles.put(d, (T) te);

@@ -48,9 +48,10 @@ public class TileEntityEnergyBridge extends TileEntity implements INeighboorUpda
         return _energyStoredMax;
     }
 
-    public double storeEnergy(double energy) {
+    public double storeEnergy(double energy, boolean simulate) {
         double toStore = Math.min(energy, _energyStoredMax - _energyStored);
-        _energyStored += toStore;
+        if (!simulate)
+            _energyStored += toStore;
         return energy - toStore;
     }
 
