@@ -35,13 +35,13 @@ public class TileEntityRFConsumer extends TileEntityEnergyConsumer<IEnergyHandle
         TileEntityEnergyBridge bridge = getFirstBridge();
         if (bridge == null)
             return 0;
-        int energyToReceive = getPowerSystem().getInternalEnergyPerInput() * maxReceive;
+        float energyToReceive = getPowerSystem().getInternalEnergyPerInput() * maxReceive;
         int received = (int) (energyToReceive - storeEnergy(energyToReceive, simulate));
         if (!simulate) {
-            lastReceivedRF = received / getPowerSystem().getInternalEnergyPerInput();
+            lastReceivedRF = (int) (received / getPowerSystem().getInternalEnergyPerInput());
             return lastReceivedRF;
         }
-        return received / getPowerSystem().getInternalEnergyPerInput();
+        return (int) (received / getPowerSystem().getInternalEnergyPerInput());
     }
 
     @Override
@@ -59,7 +59,7 @@ public class TileEntityRFConsumer extends TileEntityEnergyConsumer<IEnergyHandle
         TileEntityEnergyBridge bridge = getFirstBridge();
         if (bridge == null)
             return 0;
-        return bridge.getEnergyStored() / getPowerSystem().getInternalEnergyPerInput();
+        return (int) (bridge.getEnergyStored() / getPowerSystem().getInternalEnergyPerInput());
     }
 
     @Override
@@ -67,6 +67,6 @@ public class TileEntityRFConsumer extends TileEntityEnergyConsumer<IEnergyHandle
         TileEntityEnergyBridge bridge = getFirstBridge();
         if (bridge == null)
             return 0;
-        return bridge.getEnergyStoredMax() / getPowerSystem().getInternalEnergyPerInput();
+        return (int) (bridge.getEnergyStoredMax() / getPowerSystem().getInternalEnergyPerInput());
     }
 }

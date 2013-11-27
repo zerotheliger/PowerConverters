@@ -83,7 +83,7 @@ public class PowerConverterCore {
         powerSystemIndustrialCraft = new PowerSystem("IndustrialCraft", "IC2", 1800, 1800, new String[]{"LV", "MV", "HV", "EV"}, new int[]{32, 128, 512, 2048}, "EU/t");
         powerSystemSteam = new PowerSystem("Steam", "STEAM", 875, 875, null, null, "mB/t");
         powerSystemFactorization = new PowerSystem("Factorization", "FZ", 175, 175, null, null, "CG/t");
-        powerSystemThermalExpansion = new PowerSystem("Thermal Expansion", "RF", 438, 438, null, null, "RF/t");
+        powerSystemThermalExpansion = new PowerSystem("Thermal Expansion", "RF", 437.5F, 437.5F, null, null, "RF/t");
 
         PowerSystem.registerPowerSystem(powerSystemBuildCraft);
         PowerSystem.registerPowerSystem(powerSystemIndustrialCraft);

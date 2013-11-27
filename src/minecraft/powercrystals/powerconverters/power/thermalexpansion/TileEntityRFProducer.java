@@ -29,7 +29,7 @@ public class TileEntityRFProducer extends TileEntityEnergyProducer<IEnergyHandle
                 TileEntity te = worldObj.getBlockTileEntity(p.x, p.y, p.z);
                 if ((te instanceof IEnergyHandler) && !((te instanceof TileEntityRFConsumer) || (te instanceof TileEntityEnergyBridge))) {
                     IEnergyHandler eHandler = (IEnergyHandler) te;
-                    final double received = eHandler.receiveEnergy(p.orientation, (int) energy, false);
+                    final double received = eHandler.receiveEnergy(p.orientation, (int) (energyToUse), false);
                     energy -= received * getPowerSystem().getInternalEnergyPerOutput();
                     if (energy <= 0)
                         break; // no more energy to give, so stop scanning
@@ -60,7 +60,7 @@ public class TileEntityRFProducer extends TileEntityEnergyProducer<IEnergyHandle
         TileEntityEnergyBridge bridge = getFirstBridge();
         if (bridge == null)
             return 0;
-        return bridge.getEnergyStored() / getPowerSystem().getInternalEnergyPerInput();
+        return (int) (bridge.getEnergyStored() / getPowerSystem().getInternalEnergyPerInput());
     }
 
     @Override
@@ -68,6 +68,6 @@ public class TileEntityRFProducer extends TileEntityEnergyProducer<IEnergyHandle
         TileEntityEnergyBridge bridge = getFirstBridge();
         if (bridge == null)
             return 0;
-        return bridge.getEnergyStoredMax() / getPowerSystem().getInternalEnergyPerInput();
+        return (int) (bridge.getEnergyStoredMax() / getPowerSystem().getInternalEnergyPerInput());
     }
 }

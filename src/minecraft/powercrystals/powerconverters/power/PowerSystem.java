@@ -12,14 +12,14 @@ public class PowerSystem {
 
     private String _abbreviation;
     private String _name;
-    private int _internalEnergyPerInput;
-    private int _internalEnergyPerOutput;
+    private float _internalEnergyPerInput;
+    private float _internalEnergyPerOutput;
     private String[] _voltageNames;
     private int[] _voltageValues;
     private String _unit;
     private int _id;
 
-    public PowerSystem(String name, String abbreviation, int energyPerInput, int energyPerOutput, String[] voltageNames, int[] voltageValues, String unit) {
+    public PowerSystem(String name, String abbreviation, float energyPerInput, float energyPerOutput, String[] voltageNames, int[] voltageValues, String unit) {
         _name = name;
         _abbreviation = abbreviation;
         _internalEnergyPerInput = energyPerInput;
@@ -51,16 +51,16 @@ public class PowerSystem {
 
         for (Entry<Integer, PowerSystem> p : _powerSystems.entrySet()) {
             String configSection = "PowerRatios." + p.getValue()._name;
-            p.getValue()._internalEnergyPerInput = c.get(configSection, p.getValue()._name + "InternalEnergyPerEachInput", p.getValue()._internalEnergyPerInput).getInt();
-            p.getValue()._internalEnergyPerOutput = c.get(configSection, p.getValue()._name + "InternalEnergyPerEachOutput", p.getValue()._internalEnergyPerOutput).getInt();
+            p.getValue()._internalEnergyPerInput = (float) c.get(configSection, p.getValue()._name + "InternalEnergyPerEachInput", p.getValue()._internalEnergyPerInput).getDouble(p.getValue()._internalEnergyPerInput);
+            p.getValue()._internalEnergyPerOutput = (float) c.get(configSection, p.getValue()._name + "InternalEnergyPerEachOutput", p.getValue()._internalEnergyPerOutput).getDouble(p.getValue()._internalEnergyPerOutput);
         }
     }
 
-    public int getInternalEnergyPerInput() {
+    public float getInternalEnergyPerInput() {
         return _internalEnergyPerInput;
     }
 
-    public int getInternalEnergyPerOutput() {
+    public float getInternalEnergyPerOutput() {
         return _internalEnergyPerOutput;
     }
 

@@ -23,13 +23,14 @@ public class ChargeHandlerRF implements IChargeHandler {
 
     @Override
     public int charge(ItemStack stack, int energyInput) {
-        final int energyToUse = energyInput / getPowerSystem().getInternalEnergyPerOutput();
+        final int energyToUse = (int) (energyInput / getPowerSystem().getInternalEnergyPerOutput());
         final int energyUsed = ((ItemBlockEnergyCell) stack.getItem()).receiveEnergy(stack, energyToUse, false);
-        return (energyToUse - energyUsed) * getPowerSystem().getInternalEnergyPerOutput();
+        return (int) ((energyToUse - energyUsed) * getPowerSystem().getInternalEnergyPerOutput());
     }
 
     @Override
     public int discharge(ItemStack stack, int energyRequest) {
-        return (((ItemBlockEnergyCell) stack.getItem()).extractEnergy(stack, energyRequest / getPowerSystem().getInternalEnergyPerOutput(), false)) * getPowerSystem().getInternalEnergyPerOutput();
+        ItemBlockEnergyCell cell = (ItemBlockEnergyCell) stack.getItem();
+        return (int) ((cell.extractEnergy(stack, (int) (energyRequest / getPowerSystem().getInternalEnergyPerOutput()), false)) * getPowerSystem().getInternalEnergyPerOutput());
     }
 }
