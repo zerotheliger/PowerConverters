@@ -4,7 +4,7 @@ import factorization.api.Charge;
 import factorization.api.Coord;
 import factorization.api.IChargeConductor;
 import net.minecraft.util.MathHelper;
-import powercrystals.powerconverters.PowerConverterCore;
+import powercrystals.powerconverters.mods.Factorization;
 import powercrystals.powerconverters.power.TileEntityEnergyConsumer;
 
 public class TileEntityPowerConverterFactorizationConsumer extends TileEntityEnergyConsumer<IChargeConductor> implements IChargeConductor {
@@ -13,7 +13,7 @@ public class TileEntityPowerConverterFactorizationConsumer extends TileEntityEne
     private static final int _maxCG = 1000;
 
     public TileEntityPowerConverterFactorizationConsumer() {
-        super(PowerConverterCore.powerSystemFactorization, 0, IChargeConductor.class);
+        super(Factorization.INSTANCE.powerSystem, 0, IChargeConductor.class);
     }
 
     @Override
@@ -30,7 +30,7 @@ public class TileEntityPowerConverterFactorizationConsumer extends TileEntityEne
         if (this._charge.getValue() > 0) {
             int used = _charge.tryTake(_charge.getValue());
             _chargeLastTick = MathHelper.floor_float(used);
-            storeEnergy((used * PowerConverterCore.powerSystemFactorization.getInternalEnergyPerInput()), false);
+            storeEnergy((used * getPowerSystem().getInternalEnergyPerInput()), false);
         } else {
             this._chargeLastTick = 0;
         }

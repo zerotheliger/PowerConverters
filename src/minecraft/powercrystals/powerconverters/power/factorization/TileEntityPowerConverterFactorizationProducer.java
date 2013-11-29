@@ -4,7 +4,7 @@ import factorization.api.Charge;
 import factorization.api.Coord;
 import factorization.api.IChargeConductor;
 import net.minecraftforge.common.ForgeDirection;
-import powercrystals.powerconverters.PowerConverterCore;
+import powercrystals.powerconverters.mods.Factorization;
 import powercrystals.powerconverters.power.TileEntityEnergyProducer;
 
 import java.util.Map.Entry;
@@ -14,12 +14,12 @@ public class TileEntityPowerConverterFactorizationProducer extends TileEntityEne
     private static final int _maxCG = 1000;
 
     public TileEntityPowerConverterFactorizationProducer() {
-        super(PowerConverterCore.powerSystemFactorization, 0, IChargeConductor.class);
+        super(Factorization.INSTANCE.powerSystem, 0, IChargeConductor.class);
     }
 
     @Override
     public double produceEnergy(double energy) {
-        double CG = energy / PowerConverterCore.powerSystemFactorization.getInternalEnergyPerOutput();
+        double CG = energy / getPowerSystem().getInternalEnergyPerOutput();
         for (Entry<ForgeDirection, IChargeConductor> output : this.getTiles().entrySet()) {
             IChargeConductor o = output.getValue();
             if (o != null) {
@@ -33,7 +33,7 @@ public class TileEntityPowerConverterFactorizationProducer extends TileEntityEne
                 }
             }
         }
-        return CG * PowerConverterCore.powerSystemFactorization.getInternalEnergyPerOutput();
+        return CG * getPowerSystem().getInternalEnergyPerOutput();
     }
 
     @Override

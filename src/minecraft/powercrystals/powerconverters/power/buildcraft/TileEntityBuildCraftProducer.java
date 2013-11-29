@@ -7,7 +7,7 @@ import buildcraft.api.power.PowerHandler.PowerReceiver;
 import buildcraft.api.transport.IPipeConnection;
 import buildcraft.api.transport.IPipeTile;
 import net.minecraftforge.common.ForgeDirection;
-import powercrystals.powerconverters.PowerConverterCore;
+import powercrystals.powerconverters.mods.BuildCraft;
 import powercrystals.powerconverters.power.TileEntityEnergyProducer;
 
 import java.util.Map.Entry;
@@ -15,12 +15,12 @@ import java.util.Map.Entry;
 public class TileEntityBuildCraftProducer extends TileEntityEnergyProducer<IPowerReceptor> implements IPipeConnection, IPowerEmitter {
 
     public TileEntityBuildCraftProducer() {
-        super(PowerConverterCore.powerSystemBuildCraft, 0, IPowerReceptor.class);
+        super(BuildCraft.INSTANCE.powerSystem, 0, IPowerReceptor.class);
     }
 
     @Override
     public double produceEnergy(double energy) {
-        double mj = energy / PowerConverterCore.powerSystemBuildCraft.getInternalEnergyPerOutput();
+        double mj = energy / getPowerSystem().getInternalEnergyPerOutput();
 
         for (Entry<ForgeDirection, IPowerReceptor> output : getTiles().entrySet()) {
             PowerReceiver pp = output.getValue().getPowerReceiver(output.getKey());
@@ -34,7 +34,7 @@ public class TileEntityBuildCraftProducer extends TileEntityEnergyProducer<IPowe
                 }
             }
         }
-        return mj * PowerConverterCore.powerSystemBuildCraft.getInternalEnergyPerOutput();
+        return mj * getPowerSystem().getInternalEnergyPerOutput();
     }
 
     @Override

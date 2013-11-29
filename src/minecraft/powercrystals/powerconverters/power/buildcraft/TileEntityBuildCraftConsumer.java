@@ -9,7 +9,7 @@ import buildcraft.api.transport.IPipeTile;
 import buildcraft.core.IMachine;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import powercrystals.powerconverters.PowerConverterCore;
+import powercrystals.powerconverters.mods.BuildCraft;
 import powercrystals.powerconverters.power.TileEntityEnergyConsumer;
 
 public class TileEntityBuildCraftConsumer extends TileEntityEnergyConsumer<IPowerReceptor> implements IPowerReceptor, IPipeConnection, IMachine {
@@ -18,7 +18,7 @@ public class TileEntityBuildCraftConsumer extends TileEntityEnergyConsumer<IPowe
     private long _lastTickInjected;
 
     public TileEntityBuildCraftConsumer() {
-        super(PowerConverterCore.powerSystemBuildCraft, 0, IPowerReceptor.class);
+        super(BuildCraft.INSTANCE.powerSystem, 0, IPowerReceptor.class);
         _powerProvider = new PowerHandler(this, PowerHandler.Type.MACHINE);
         _powerProvider.configure(0, 100, 0, 1000); // 25 latency
     }
@@ -40,10 +40,10 @@ public class TileEntityBuildCraftConsumer extends TileEntityEnergyConsumer<IPowe
         }
 
         float consumed = _powerProvider.useEnergy(0, _powerProvider.getEnergyStored(), false);
-        float energyToUse = consumed * PowerConverterCore.powerSystemBuildCraft.getInternalEnergyPerInput();
+        float energyToUse = consumed * getPowerSystem().getInternalEnergyPerInput();
         float leftOvers = (float) storeEnergy(energyToUse, false);
 
-        float finalConsumption = consumed - (leftOvers * PowerConverterCore.powerSystemBuildCraft.getInternalEnergyPerInput());
+        float finalConsumption = consumed - (leftOvers * getPowerSystem().getInternalEnergyPerInput());
         if (finalConsumption > 0) {
             _powerProvider.useEnergy(0, finalConsumption, true);
             _mjLastTick = (int) finalConsumption;

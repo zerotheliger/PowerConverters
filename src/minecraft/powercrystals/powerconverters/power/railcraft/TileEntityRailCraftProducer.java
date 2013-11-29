@@ -29,7 +29,7 @@ public class TileEntityRailCraftProducer extends TileEntityEnergyProducer<IFluid
             TileEntity te = worldObj.getBlockTileEntity(bp.x, bp.y, bp.z);
 
             if (te instanceof IFluidHandler) {
-                final int steam = (int) Math.min(energy, PowerConverterCore.throttleSteamProducer.getInt());
+                final int steam = (int) Math.min(energy, PowerConverterCore.throttleSteamProducer);
                 FluidStack stack = FluidRegistry.getFluidStack("steam", steam);
                 if (stack == null)
                     FluidRegistry.getFluidStack("Steam", steam);

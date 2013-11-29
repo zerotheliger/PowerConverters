@@ -18,7 +18,7 @@ import java.util.Map.Entry;
 
 public class TileEntityEnergyBridge extends TileEntity implements INeighboorUpdateTile {
     private int _energyStored;
-    private int _energyStoredMax = PowerConverterCore.bridgeBufferSize.getInt();
+    private int _energyStoredMax = PowerConverterCore.bridgeBufferSize;
     private int _energyScaledClient;
 
     private int _energyStoredLast;

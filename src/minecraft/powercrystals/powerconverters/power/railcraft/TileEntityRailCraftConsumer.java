@@ -25,7 +25,7 @@ public class TileEntityRailCraftConsumer extends TileEntityEnergyConsumer<IFluid
         super.updateEntity();
 
         if (_steamTank.getFluidAmount() > 0) {
-            int amount = Math.min(_steamTank.getFluidAmount(), PowerConverterCore.throttleSteamConsumer.getInt());
+            int amount = Math.min(_steamTank.getFluidAmount(), PowerConverterCore.throttleSteamConsumer);
             float energy = amount * PowerConverterCore.powerSystemSteam.getInternalEnergyPerInput();
             energy = (int) storeEnergy(energy, false);
             int toDrain = (int) (amount - (energy / PowerConverterCore.powerSystemSteam.getInternalEnergyPerInput()));
@@ -70,7 +70,7 @@ public class TileEntityRailCraftConsumer extends TileEntityEnergyConsumer<IFluid
 
     @Override
     public FluidTankInfo[] getTankInfo(ForgeDirection from) {
-        return new FluidTankInfo[] { _steamTank.getInfo() };
+        return new FluidTankInfo[]{_steamTank.getInfo()};
     }
 
     @Override

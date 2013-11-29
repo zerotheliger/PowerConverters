@@ -1,8 +1,8 @@
 package powercrystals.powerconverters.power.thermalexpansion;
 
 import net.minecraft.item.ItemStack;
-import powercrystals.powerconverters.PowerConverterCore;
 import powercrystals.powerconverters.common.IChargeHandler;
+import powercrystals.powerconverters.mods.ThermalExpansion;
 import powercrystals.powerconverters.power.PowerSystem;
 import thermalexpansion.block.energycell.ItemBlockEnergyCell;
 
@@ -13,7 +13,7 @@ public class ChargeHandlerRF implements IChargeHandler {
 
     @Override
     public PowerSystem getPowerSystem() {
-        return PowerConverterCore.powerSystemThermalExpansion;
+        return ThermalExpansion.INSTANCE.powerSystem;
     }
 
     @Override

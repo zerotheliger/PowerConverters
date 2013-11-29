@@ -8,7 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
-import powercrystals.powerconverters.PowerConverterCore;
+import powercrystals.powerconverters.mods.IndustrialCraft;
 import powercrystals.powerconverters.power.TileEntityEnergyConsumer;
 
 public class TileEntityIndustrialCraftConsumer extends TileEntityEnergyConsumer<IEnergyEmitter> implements IEnergySink {
@@ -23,7 +23,7 @@ public class TileEntityIndustrialCraftConsumer extends TileEntityEnergyConsumer<
     }
 
     public TileEntityIndustrialCraftConsumer(int voltageIndex) {
-        super(PowerConverterCore.powerSystemIndustrialCraft, voltageIndex, IEnergyEmitter.class);
+        super(IndustrialCraft.INSTANCE.powerSystem, voltageIndex, IEnergyEmitter.class);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class TileEntityIndustrialCraftConsumer extends TileEntityEnergyConsumer<
 
     @Override
     public double demandedEnergyUnits() {
-        return getTotalEnergyDemand() / PowerConverterCore.powerSystemIndustrialCraft.getInternalEnergyPerInput();
+        return getTotalEnergyDemand() / getPowerSystem().getInternalEnergyPerInput();
     }
 
     @Override
@@ -80,8 +80,8 @@ public class TileEntityIndustrialCraftConsumer extends TileEntityEnergyConsumer<
             return amount;
         }
 
-        double pcuNotStored = storeEnergy(amount * PowerConverterCore.powerSystemIndustrialCraft.getInternalEnergyPerInput(), false);
-        double euNotStored = pcuNotStored / PowerConverterCore.powerSystemIndustrialCraft.getInternalEnergyPerInput();
+        double pcuNotStored = storeEnergy(amount * getPowerSystem().getInternalEnergyPerInput(), false);
+        double euNotStored = pcuNotStored / getPowerSystem().getInternalEnergyPerInput();
 
         double euThisInjection = (amount - euNotStored);
 

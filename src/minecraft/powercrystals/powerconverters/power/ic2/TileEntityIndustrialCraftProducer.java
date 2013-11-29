@@ -7,8 +7,8 @@ import ic2.api.energy.tile.IEnergySink;
 import ic2.api.energy.tile.IEnergyTile;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
-import powercrystals.powerconverters.PowerConverterCore;
 import powercrystals.powerconverters.common.TileEntityEnergyBridge;
+import powercrystals.powerconverters.mods.IndustrialCraft;
 import powercrystals.powerconverters.position.BlockPosition;
 import powercrystals.powerconverters.power.TileEntityEnergyProducer;
 
@@ -25,7 +25,7 @@ public class TileEntityIndustrialCraftProducer extends TileEntityEnergyProducer<
     }
 
     public TileEntityIndustrialCraftProducer(int voltageIndex) {
-        super(PowerConverterCore.powerSystemIndustrialCraft, voltageIndex, IEnergyAcceptor.class);
+        super(IndustrialCraft.INSTANCE.powerSystem, voltageIndex, IEnergyAcceptor.class);
         if (voltageIndex == 0)
             maxSendEnergy = 32;
         else if (voltageIndex == 1)

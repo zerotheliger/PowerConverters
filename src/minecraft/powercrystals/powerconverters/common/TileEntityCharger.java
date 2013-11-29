@@ -3,7 +3,7 @@ package powercrystals.powerconverters.common;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import powercrystals.powerconverters.PowerConverterCore;
+import powercrystals.powerconverters.mods.IndustrialCraft;
 import powercrystals.powerconverters.power.TileEntityEnergyProducer;
 
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ public class TileEntityCharger extends TileEntityEnergyProducer<IInventory> {
     }
 
     public TileEntityCharger() {
-        super(PowerConverterCore.powerSystemIndustrialCraft, 0, IInventory.class);
+        super(IndustrialCraft.INSTANCE.powerSystem, 0, IInventory.class);
     }
 
     @Override

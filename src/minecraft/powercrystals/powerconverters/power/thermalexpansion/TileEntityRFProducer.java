@@ -3,8 +3,8 @@ package powercrystals.powerconverters.power.thermalexpansion;
 import cofh.api.energy.IEnergyHandler;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
-import powercrystals.powerconverters.PowerConverterCore;
 import powercrystals.powerconverters.common.TileEntityEnergyBridge;
+import powercrystals.powerconverters.mods.ThermalExpansion;
 import powercrystals.powerconverters.position.BlockPosition;
 import powercrystals.powerconverters.power.TileEntityEnergyProducer;
 
@@ -16,7 +16,7 @@ import java.util.List;
 public class TileEntityRFProducer extends TileEntityEnergyProducer<IEnergyHandler> implements IEnergyHandler {
 
     public TileEntityRFProducer() {
-        super(PowerConverterCore.powerSystemThermalExpansion, 0, IEnergyHandler.class);
+        super(ThermalExpansion.INSTANCE.powerSystem, 0, IEnergyHandler.class);
     }
 
     @Override
