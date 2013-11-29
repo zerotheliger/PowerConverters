@@ -1,4 +1,4 @@
-package powercrystals.powerconverters.power.railcraft;
+package powercrystals.powerconverters.power.steam;
 
 import buildcraft.api.transport.IPipeConnection;
 import buildcraft.api.transport.IPipeTile;
@@ -11,11 +11,11 @@ import powercrystals.powerconverters.mods.reference.ModIDReference;
 import powercrystals.powerconverters.power.TileEntityEnergyConsumer;
 
 @Optional.Interface(modid = ModIDReference.BUILDCRAFT, iface = InterfaceReference.BuildCraft.IPipeConnection)
-public class TileEntityRailCraftConsumer extends TileEntityEnergyConsumer<IFluidContainerItem> implements IFluidHandler, IPipeConnection {
+public class TileEntitySteamConsumer extends TileEntityEnergyConsumer<IFluidContainerItem> implements IFluidHandler, IPipeConnection {
     private FluidTank _steamTank;
     private int _mBLastTick;
 
-    public TileEntityRailCraftConsumer() {
+    public TileEntitySteamConsumer() {
         super(PowerConverterCore.powerSystemSteam, 0, IFluidContainerItem.class);
         _steamTank = new FluidTank(FluidContainerRegistry.BUCKET_VOLUME);
     }

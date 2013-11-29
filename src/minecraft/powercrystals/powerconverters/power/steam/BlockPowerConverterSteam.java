@@ -1,4 +1,4 @@
-package powercrystals.powerconverters.power.railcraft;
+package powercrystals.powerconverters.power.steam;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -9,8 +9,8 @@ import powercrystals.powerconverters.PowerConverterCore;
 import powercrystals.powerconverters.gui.PCCreativeTab;
 import powercrystals.powerconverters.power.BlockPowerConverter;
 
-public class BlockPowerConverterRailCraft extends BlockPowerConverter {
-    public BlockPowerConverterRailCraft(int blockId) {
+public class BlockPowerConverterSteam extends BlockPowerConverter {
+    public BlockPowerConverterSteam(int blockId) {
         super(blockId, 2);
         setUnlocalizedName("powerconverters.steam");
         setCreativeTab(PCCreativeTab.tab);
@@ -18,8 +18,8 @@ public class BlockPowerConverterRailCraft extends BlockPowerConverter {
 
     @Override
     public TileEntity createTileEntity(World world, int metadata) {
-        if (metadata == 0) return new TileEntityRailCraftConsumer();
-        else if (metadata == 1) return new TileEntityRailCraftProducer();
+        if (metadata == 0) return new TileEntitySteamConsumer();
+        else if (metadata == 1) return new TileEntitySteamProducer();
 
         return createNewTileEntity(world);
     }

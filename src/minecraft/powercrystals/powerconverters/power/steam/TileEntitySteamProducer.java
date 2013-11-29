@@ -1,4 +1,4 @@
-package powercrystals.powerconverters.power.railcraft;
+package powercrystals.powerconverters.power.steam;
 
 import buildcraft.api.transport.IPipeConnection;
 import buildcraft.api.transport.IPipeTile;
@@ -13,9 +13,9 @@ import powercrystals.powerconverters.position.BlockPosition;
 import powercrystals.powerconverters.power.TileEntityEnergyProducer;
 
 @Optional.Interface(modid = ModIDReference.BUILDCRAFT, iface = InterfaceReference.BuildCraft.IPipeConnection)
-public class TileEntityRailCraftProducer extends TileEntityEnergyProducer<IFluidHandler> implements IFluidHandler, IPipeConnection {
+public class TileEntitySteamProducer extends TileEntityEnergyProducer<IFluidHandler> implements IFluidHandler, IPipeConnection {
 
-    public TileEntityRailCraftProducer() {
+    public TileEntitySteamProducer() {
         super(PowerConverterCore.powerSystemSteam, 0, IFluidHandler.class);
     }
 

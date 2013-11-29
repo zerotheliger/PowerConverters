@@ -25,10 +25,10 @@ import powercrystals.powerconverters.mods.IndustrialCraft;
 import powercrystals.powerconverters.mods.ThermalExpansion;
 import powercrystals.powerconverters.mods.base.LoaderBase;
 import powercrystals.powerconverters.power.PowerSystem;
-import powercrystals.powerconverters.power.railcraft.BlockPowerConverterRailCraft;
-import powercrystals.powerconverters.power.railcraft.ItemBlockPowerConverterRailCraft;
-import powercrystals.powerconverters.power.railcraft.TileEntityRailCraftConsumer;
-import powercrystals.powerconverters.power.railcraft.TileEntityRailCraftProducer;
+import powercrystals.powerconverters.power.steam.BlockPowerConverterSteam;
+import powercrystals.powerconverters.power.steam.ItemBlockPowerConverterSteam;
+import powercrystals.powerconverters.power.steam.TileEntitySteamConsumer;
+import powercrystals.powerconverters.power.steam.TileEntitySteamProducer;
 
 import java.io.File;
 
@@ -81,7 +81,8 @@ public final class PowerConverterCore {
     }
 
     @EventHandler
-    public void init(FMLInitializationEvent evt) {
+    public void init(FMLInitializationEvent evt) throws Exception {
+        loadSteamConverters();
         for (LoaderBase base : bases)
             base.load(LoaderBase.Stage.INIT);
     }
@@ -110,12 +111,20 @@ public final class PowerConverterCore {
                 'I', Item.ingotIron,
                 'C', Block.chest);
 
+        NetworkRegistry.instance().registerGuiHandler(instance, new PCGUIHandler());
+        MinecraftForge.EVENT_BUS.register(instance);
+
+        // Cleanup
+        bases = null;
+    }
+
+    private void loadSteamConverters() throws Exception {
         // Special handling case just for steam
         if (Loader.isModLoaded("Railcraft") || Loader.isModLoaded("factorization")) {
-            converterBlockSteam = new BlockPowerConverterRailCraft(blockIdSteam);
-            GameRegistry.registerBlock(converterBlockSteam, ItemBlockPowerConverterRailCraft.class, converterBlockSteam.getUnlocalizedName());
-            GameRegistry.registerTileEntity(TileEntityRailCraftConsumer.class, "powerConverterSteamConsumer");
-            GameRegistry.registerTileEntity(TileEntityRailCraftProducer.class, "powerConverterSteamProducer");
+            converterBlockSteam = new BlockPowerConverterSteam(blockIdSteam);
+            GameRegistry.registerBlock(converterBlockSteam, ItemBlockPowerConverterSteam.class, converterBlockSteam.getUnlocalizedName());
+            GameRegistry.registerTileEntity(TileEntitySteamConsumer.class, "powerConverterSteamConsumer");
+            GameRegistry.registerTileEntity(TileEntitySteamProducer.class, "powerConverterSteamProducer");
 
             if (Loader.isModLoaded("Railcraft")) {
                 GameRegistry.addRecipe(new ItemStack(converterBlockSteam, 1, 0),
@@ -133,12 +142,6 @@ public final class PowerConverterCore {
             GameRegistry.addShapelessRecipe(new ItemStack(converterBlockSteam, 1, 1), new ItemStack(converterBlockSteam, 1, 0));
             GameRegistry.addShapelessRecipe(new ItemStack(converterBlockSteam, 1, 0), new ItemStack(converterBlockSteam, 1, 1));
         }
-
-        NetworkRegistry.instance().registerGuiHandler(instance, new PCGUIHandler());
-        MinecraftForge.EVENT_BUS.register(instance);
-
-        // Cleanup
-        bases = null;
     }
 
     private static void loadConfig(File dir) {
