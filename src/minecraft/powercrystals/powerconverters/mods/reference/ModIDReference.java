@@ -1,4 +1,4 @@
-package powercrystals.powerconverters.mods;
+package powercrystals.powerconverters.mods.reference;
 
 /**
  * @author samrg472

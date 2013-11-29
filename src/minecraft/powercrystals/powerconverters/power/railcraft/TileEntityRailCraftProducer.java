@@ -7,8 +7,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.fluids.*;
 import powercrystals.powerconverters.PowerConverterCore;
-import powercrystals.powerconverters.mods.InterfaceReference;
-import powercrystals.powerconverters.mods.ModIDReference;
+import powercrystals.powerconverters.mods.reference.InterfaceReference;
+import powercrystals.powerconverters.mods.reference.ModIDReference;
 import powercrystals.powerconverters.position.BlockPosition;
 import powercrystals.powerconverters.power.TileEntityEnergyProducer;
 

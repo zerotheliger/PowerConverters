@@ -117,7 +117,7 @@ public class PowerConverterCore {
                 'I', Item.ingotIron,
                 'C', Block.chest);
 
-        if (Loader.isModLoaded("BuildCraft|Energy") || Loader.isModLoaded("ThermalExpansion")) {
+        if (Loader.isModLoaded("BuildCraft|Energy")) {
             converterBlockBuildCraft = new BlockPowerConverterBuildCraft(blockIdBuildCraft.getInt());
             GameRegistry.registerBlock(converterBlockBuildCraft, ItemBlockPowerConverterBuildCraft.class, converterBlockBuildCraft.getUnlocalizedName());
             GameRegistry.registerTileEntity(TileEntityBuildCraftConsumer.class, "powerConverterBCConsumer");
