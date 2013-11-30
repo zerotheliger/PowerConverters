@@ -1,18 +1,16 @@
 package powercrystals.powerconverters.power.buildcraft;
 
-import buildcraft.api.gates.IAction;
 import buildcraft.api.power.IPowerReceptor;
 import buildcraft.api.power.PowerHandler;
 import buildcraft.api.power.PowerHandler.PowerReceiver;
 import buildcraft.api.transport.IPipeConnection;
 import buildcraft.api.transport.IPipeTile;
-import buildcraft.core.IMachine;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import powercrystals.powerconverters.mods.BuildCraft;
 import powercrystals.powerconverters.power.TileEntityEnergyConsumer;
 
-public class TileEntityBuildCraftConsumer extends TileEntityEnergyConsumer<IPowerReceptor> implements IPowerReceptor, IPipeConnection, IMachine {
+public class TileEntityBuildCraftConsumer extends TileEntityEnergyConsumer<IPowerReceptor> implements IPowerReceptor, IPipeConnection {
     private PowerHandler _powerProvider;
     private int _mjLastTick = 0;
     private long _lastTickInjected;
@@ -72,25 +70,5 @@ public class TileEntityBuildCraftConsumer extends TileEntityEnergyConsumer<IPowe
     @Override
     public ConnectOverride overridePipeConnection(IPipeTile.PipeType pipeType, ForgeDirection direction) {
         return pipeType == IPipeTile.PipeType.POWER ? ConnectOverride.DEFAULT : ConnectOverride.DISCONNECT;
-    }
-
-    @Override
-    public boolean isActive() {
-        return false;
-    }
-
-    @Override
-    public boolean manageFluids() {
-        return false;
-    }
-
-    @Override
-    public boolean manageSolids() {
-        return false;
-    }
-
-    @Override
-    public boolean allowAction(IAction iAction) {
-        return false;
     }
 }
