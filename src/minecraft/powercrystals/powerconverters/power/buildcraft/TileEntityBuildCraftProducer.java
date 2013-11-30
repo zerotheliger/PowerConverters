@@ -3,14 +3,13 @@ package powercrystals.powerconverters.power.buildcraft;
 import buildcraft.api.power.IPowerEmitter;
 import buildcraft.api.power.IPowerReceptor;
 import buildcraft.api.power.PowerHandler;
-import buildcraft.api.power.PowerHandler.PowerReceiver;
 import buildcraft.api.transport.IPipeConnection;
 import buildcraft.api.transport.IPipeTile;
 import net.minecraftforge.common.ForgeDirection;
 import powercrystals.powerconverters.mods.BuildCraft;
 import powercrystals.powerconverters.power.TileEntityEnergyProducer;
 
-import java.util.Map.Entry;
+import java.util.Map;
 
 public class TileEntityBuildCraftProducer extends TileEntityEnergyProducer<IPowerReceptor> implements IPipeConnection, IPowerEmitter {
 
@@ -20,18 +19,19 @@ public class TileEntityBuildCraftProducer extends TileEntityEnergyProducer<IPowe
 
     @Override
     public double produceEnergy(double energy) {
-        double mj = energy / getPowerSystem().getInternalEnergyPerOutput();
 
-        for (Entry<ForgeDirection, IPowerReceptor> output : getTiles().entrySet()) {
-            PowerReceiver pp = output.getValue().getPowerReceiver(output.getKey());
+        float mj = (float) (energy / getPowerSystem().getInternalEnergyPerOutput());
+
+        for (Map.Entry<ForgeDirection, IPowerReceptor> output : getTiles().entrySet()) {
+            PowerHandler.PowerReceiver pp = output.getValue().getPowerReceiver(output.getKey().getOpposite());
             if (pp != null && pp.getMinEnergyReceived() <= mj) {
-                float mjUsed = (float) Math.min(Math.min(pp.getMaxEnergyReceived(), mj), pp.getMaxEnergyStored() - (int) Math.floor(pp.getEnergyStored()));
-                pp.receiveEnergy(PowerHandler.Type.MACHINE, mjUsed, output.getKey());
+                float mjUsed = Math.min(mj, pp.powerRequest());
+                mjUsed = pp.receiveEnergy(PowerHandler.Type.STORAGE, mjUsed, output.getKey().getOpposite());
 
                 mj -= mjUsed;
-                if (mj <= 0) {
+                if (mj <= 0)
                     return 0;
-                }
+
             }
         }
         return mj * getPowerSystem().getInternalEnergyPerOutput();
@@ -39,7 +39,7 @@ public class TileEntityBuildCraftProducer extends TileEntityEnergyProducer<IPowe
 
     @Override
     public ConnectOverride overridePipeConnection(IPipeTile.PipeType pipeType, ForgeDirection direction) {
-        return pipeType == IPipeTile.PipeType.POWER ? ConnectOverride.CONNECT : ConnectOverride.DISCONNECT;
+        return pipeType == IPipeTile.PipeType.POWER ? ConnectOverride.DEFAULT : ConnectOverride.DISCONNECT;
     }
 
     @Override
