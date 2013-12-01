@@ -4,6 +4,7 @@ import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergyAcceptor;
 import ic2.api.energy.tile.IEnergySource;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
@@ -15,7 +16,7 @@ import powercrystals.powerconverters.power.TileEntityEnergyProducer;
 import java.util.Map;
 
 public class TileEntityIndustrialCraftProducer extends TileEntityEnergyProducer<IEnergyAcceptor> implements IEnergySource, ICustomHandler {
-    private final double maxSendEnergy;
+    private double maxSendEnergy;
     private boolean _isAddedToEnergyNet;
     private boolean _didFirstAddToNet;
 
@@ -28,13 +29,17 @@ public class TileEntityIndustrialCraftProducer extends TileEntityEnergyProducer<
 
     public TileEntityIndustrialCraftProducer(int voltageIndex) {
         super(IndustrialCraft.INSTANCE.powerSystem, voltageIndex, IEnergyAcceptor.class);
-        if (voltageIndex == 0) // lv
+        setMaxSendEnergy(voltageIndex);
+    }
+
+    private void setMaxSendEnergy(int index) {
+        if (index == 0) // lv
             maxSendEnergy = 32;
-        else if (voltageIndex == 1) // mv
+        else if (index == 1) // mv
             maxSendEnergy = 128;
-        else if (voltageIndex == 2) // hv
+        else if (index == 2) // hv
             maxSendEnergy = 512;
-        else if (voltageIndex == 3) // ev
+        else if (index == 3) // ev
             maxSendEnergy = 2048;
         else
             maxSendEnergy = 0;
@@ -48,6 +53,12 @@ public class TileEntityIndustrialCraftProducer extends TileEntityEnergyProducer<
             _didFirstAddToNet = true;
             _isAddedToEnergyNet = true;
         }
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound tag) {
+        super.readFromNBT(tag);
+        setMaxSendEnergy(_voltageIndex);
     }
 
     @Override
