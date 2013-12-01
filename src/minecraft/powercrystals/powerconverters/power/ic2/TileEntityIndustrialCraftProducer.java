@@ -3,21 +3,23 @@ package powercrystals.powerconverters.power.ic2;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
 import ic2.api.energy.tile.IEnergyAcceptor;
-import ic2.api.energy.tile.IEnergySink;
-import ic2.api.energy.tile.IEnergyTile;
+import ic2.api.energy.tile.IEnergySource;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
 import powercrystals.powerconverters.common.TileEntityEnergyBridge;
 import powercrystals.powerconverters.mods.IndustrialCraft;
-import powercrystals.powerconverters.position.BlockPosition;
+import powercrystals.powerconverters.power.ICustomHandler;
 import powercrystals.powerconverters.power.TileEntityEnergyProducer;
 
-import java.util.List;
+import java.util.Map;
 
-public class TileEntityIndustrialCraftProducer extends TileEntityEnergyProducer<IEnergyAcceptor> implements IEnergyTile {
+public class TileEntityIndustrialCraftProducer extends TileEntityEnergyProducer<IEnergyAcceptor> implements IEnergySource, ICustomHandler {
     private final double maxSendEnergy;
     private boolean _isAddedToEnergyNet;
     private boolean _didFirstAddToNet;
+
+    private double lastSentEnergy;
 
     @SuppressWarnings("UnusedDeclaration")
     public TileEntityIndustrialCraftProducer() {
@@ -26,13 +28,13 @@ public class TileEntityIndustrialCraftProducer extends TileEntityEnergyProducer<
 
     public TileEntityIndustrialCraftProducer(int voltageIndex) {
         super(IndustrialCraft.INSTANCE.powerSystem, voltageIndex, IEnergyAcceptor.class);
-        if (voltageIndex == 0)
+        if (voltageIndex == 0) // lv
             maxSendEnergy = 32;
-        else if (voltageIndex == 1)
+        else if (voltageIndex == 1) // mv
             maxSendEnergy = 128;
-        else if (voltageIndex == 2)
+        else if (voltageIndex == 2) // hv
             maxSendEnergy = 512;
-        else if (voltageIndex == 3)
+        else if (voltageIndex == 3) // ev
             maxSendEnergy = 2048;
         else
             maxSendEnergy = 0;
@@ -68,28 +70,43 @@ public class TileEntityIndustrialCraftProducer extends TileEntityEnergyProducer<
     }
 
     @Override
-    public double produceEnergy(double _energy) {
-        if (!_isAddedToEnergyNet)
-            return _energy;
+    public double produceEnergy(double energy) {
+        return energy;
+    }
 
-        final double energyToUse = _energy / getPowerSystem().getInternalEnergyPerOutput();
-        if (energyToUse > 0) {
-            List<BlockPosition> positions = new BlockPosition(xCoord, yCoord, zCoord).getAdjacent(true);
-            for (BlockPosition p : positions) {
-                TileEntity te = worldObj.getBlockTileEntity(p.x, p.y, p.z);
-                if ((te instanceof IEnergySink) && !((te instanceof TileEntityIndustrialCraftConsumer) || (te instanceof TileEntityEnergyBridge))) {
-                    IEnergySink sink = (IEnergySink) te;
-                    final double demands = sink.demandedEnergyUnits();
-                    final double toInject = Math.min(maxSendEnergy, Math.min(energyToUse, demands));
-                    final double leftOver = sink.injectEnergyUnits(p.orientation, toInject);
-                    _energy -= toInject * getPowerSystem().getInternalEnergyPerOutput();
-                    _energy += leftOver * getPowerSystem().getInternalEnergyPerOutput();
-                    if (_energy <= 0)
-                        break; // no more energy to give, so stop scanning
-                }
-            }
+    @Override
+    public double getOfferedEnergy() {
+        double eu = 0D;
+        for (TileEntityEnergyBridge bridge : getBridges().values())
+            eu += bridge.getEnergyStored();
+        return Math.min(maxSendEnergy, eu / getPowerSystem().getInternalEnergyPerOutput());
+    }
+
+    @Override
+    public void drawEnergy(double amount) {
+        double drawn = 0D;
+        for (Map.Entry<ForgeDirection, TileEntityEnergyBridge> bridge : getBridges().entrySet()) {
+            drawn += bridge.getValue().useEnergy(amount * getPowerSystem().getInternalEnergyPerOutput(), false) / getPowerSystem().getInternalEnergyPerOutput();
+            if (drawn >= amount)
+                break;
         }
-        return _energy;
+        lastSentEnergy = drawn;
+    }
 
+    @Override
+    public boolean emitsEnergyTo(TileEntity receiver, ForgeDirection direction) {
+        return true;
+    }
+
+    @Override
+    public boolean shouldHandle() {
+        return true;
+    }
+
+    @Override
+    public double getOutputRate() {
+        double temp = lastSentEnergy;
+        lastSentEnergy = 0;
+        return temp;
     }
 }

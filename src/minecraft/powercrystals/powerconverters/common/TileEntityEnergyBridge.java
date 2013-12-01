@@ -8,6 +8,7 @@ import net.minecraftforge.common.ForgeDirection;
 import powercrystals.powerconverters.PowerConverterCore;
 import powercrystals.powerconverters.position.BlockPosition;
 import powercrystals.powerconverters.position.INeighboorUpdateTile;
+import powercrystals.powerconverters.power.ICustomHandler;
 import powercrystals.powerconverters.power.TileEntityBridgeComponent;
 import powercrystals.powerconverters.power.TileEntityEnergyConsumer;
 import powercrystals.powerconverters.power.TileEntityEnergyProducer;
@@ -40,19 +41,57 @@ public class TileEntityEnergyBridge extends TileEntity implements INeighboorUpda
         }
     }
 
+    /**
+     * @return power in buffer (must be converted to the power system units)
+     */
     public int getEnergyStored() {
         return _energyStored;
     }
 
+    /**
+     * @return maximum buffer size (must be converted to the power system units)
+     */
     public int getEnergyStoredMax() {
         return _energyStoredMax;
     }
 
+    /**
+     * Stores energy in the internal buffer
+     * @param energy how much current to store
+     * @param simulate whether to actually store the power
+     * @return how much energy was stored
+     */
     public double storeEnergy(double energy, boolean simulate) {
         double toStore = Math.min(energy, _energyStoredMax - _energyStored);
         if (!simulate)
             _energyStored += toStore;
         return energy - toStore;
+    }
+
+    /**
+     * Uses energy from the internal buffer
+     * @param energy how much current to draw
+     * @param simulate whether to actually draw the power
+     * @return how much energy was used
+     */
+    public double useEnergy(double energy, boolean simulate) {
+        double toUse = Math.max(0, Math.min(_energyStored, energy));
+        if (!simulate) {
+            _energyStored -= toUse;
+            _isInputLimited = !((_energyStored == _energyStoredLast && _energyStored == _energyStoredMax) || _energyStored > _energyStoredLast);
+            _energyStoredLast = _energyStored;
+        }
+        return toUse;
+    }
+
+    /**
+     * Updates the producer information that will be displayed inside the GUI
+     *
+     * @param dir    direction that the producer is in of the energy bridge
+     * @param output converted output units
+     */
+    public void updateProducerInfo(ForgeDirection dir, int output) {
+        _producerOutputRates.put(dir, Math.max(0, output));
     }
 
     @Override
@@ -68,22 +107,25 @@ public class TileEntityEnergyBridge extends TileEntity implements INeighboorUpda
             int energyRemaining = Math.min(_energyStored, _energyStoredMax);
             int energyNotProduced;
             for (Entry<ForgeDirection, TileEntityEnergyProducer<?>> prod : _producerTiles.entrySet()) {
+                if (prod.getValue() instanceof ICustomHandler && ((ICustomHandler) prod.getValue()).shouldHandle()) {
+                    int temp = (int) ((ICustomHandler) prod.getValue()).getOutputRate();
+                    updateProducerInfo(prod.getKey(), temp);
+                    continue;
+                }
                 if (energyRemaining > 0) {
                     energyNotProduced = (int) prod.getValue().produceEnergy(energyRemaining);
                     if (energyNotProduced > energyRemaining) {
                         energyNotProduced = energyRemaining;
                     }
-                    _producerOutputRates.put(prod.getKey(), (int) ((energyRemaining - energyNotProduced) / prod.getValue().getPowerSystem().getInternalEnergyPerOutput()));
+                    updateProducerInfo(prod.getKey(), (int) ((energyRemaining - energyNotProduced) / prod.getValue().getPowerSystem().getInternalEnergyPerOutput()));
                     energyRemaining = energyNotProduced;
                 } else {
                     prod.getValue().produceEnergy(0);
-                    _producerOutputRates.put(prod.getKey(), 0);
+                    updateProducerInfo(prod.getKey(), 0);
                 }
             }
             _energyStored = Math.max(0, energyRemaining);
-
             _isInputLimited = !((_energyStored == _energyStoredLast && _energyStored == _energyStoredMax) || _energyStored > _energyStoredLast);
-
             _energyStoredLast = _energyStored;
         }
     }
