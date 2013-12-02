@@ -1,7 +1,7 @@
 package powercrystals.powerconverters.mods;
 
-import buildcraft.BuildCraftEnergy;
 import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import powercrystals.powerconverters.PowerConverterCore;
@@ -44,10 +44,13 @@ public final class BuildCraft extends LoaderBase {
     protected void postInit() {
         GameRegistry.addShapelessRecipe(new ItemStack(converterBlock, 1, 1), new ItemStack(converterBlock, 1, 0));
         GameRegistry.addShapelessRecipe(new ItemStack(converterBlock, 1, 0), new ItemStack(converterBlock, 1, 1));
-
-        GameRegistry.addRecipe(new ItemStack(converterBlock, 1, 0),
-                "G G", " E ", "G G",
-                'G', Item.ingotGold,
-                'E', new ItemStack(BuildCraftEnergy.engineBlock, 1, 1));
+        try {
+            GameRegistry.addRecipe(new ItemStack(converterBlock, 1, 0),
+                    "G G", " E ", "G G",
+                    'G', Item.ingotGold,
+                    'E', new ItemStack((Block) Class.forName("buildcraft.BuildCraftEnergy").getField("engineBlock").get(null), 1, 1));
+        } catch (Throwable t) {
+            t.printStackTrace(System.err);
+        }
     }
 }
