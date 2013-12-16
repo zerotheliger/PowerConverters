@@ -123,8 +123,11 @@ public class BlockPowerConverterCommon extends BlockContainer {
     @Override
     public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity) {
         if (entity instanceof EntityPlayer && world.getBlockMetadata(x, y, z) == 2) {
-            TileEntityCharger charger = (TileEntityCharger) world.getBlockTileEntity(x, y, z);
-            charger.setPlayer((EntityPlayer) entity);
+            TileEntity te = world.getBlockTileEntity(x, y, z);
+            if (te instanceof TileEntityCharger) {
+                TileEntityCharger charger = (TileEntityCharger) te;
+                charger.setPlayer((EntityPlayer) entity);
+            }
         }
     }
 }
