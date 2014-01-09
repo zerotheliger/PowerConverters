@@ -1,6 +1,8 @@
 package powercrystals.powerconverters.mods;
 
 import ic2.api.item.Items;
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import powercrystals.powerconverters.PowerConverterCore;
 import powercrystals.powerconverters.common.TileEntityCharger;
@@ -32,7 +34,7 @@ public final class IndustrialCraft extends LoaderBase
     @Override
     protected void preInit()
     {
-	powerSystem = new PowerSystem("IndustrialCraft", "IC2", 400, 400,/*1800, 1800,*/new String[] { "LV", "MV", "HV", "EV", "AV" }, new int[] { 32, 128, 512, 2048, 8192 }, "EU/t");
+	powerSystem = new PowerSystem("IndustrialCraft", "IC2", 4000, 4000,/*1800, 1800,*/new String[] { "LV", "MV", "HV", "EV", "AV" }, new int[] { 32, 128, 512, 2048, 8192 }, "EU/t");
 	PowerSystem.registerPowerSystem(powerSystem);
 	TileEntityCharger.registerChargeHandler(new ChargeHandlerIndustrialCraft());
     }
@@ -68,5 +70,12 @@ public final class IndustrialCraft extends LoaderBase
 	//GameRegistry.addRecipe(new ItemStack(converterBlock, 1, 2), "G G", " T ", "G G", 'G', Item.ingotGold, 'T', Items.getItem("mvTransformer"));
 	//GameRegistry.addRecipe(new ItemStack(converterBlock, 1, 4), "G G", " T ", "G G", 'G', Item.ingotGold, 'T', Items.getItem("hvTransformer"));
 	//GameRegistry.addRecipe(new ItemStack(converterBlock, 1, 6), "G G", " T ", "G G", 'G', Item.ingotGold, 'T', Items.getItem("evTransformer"));
+	ItemStack storage = Items.getItem("batBox");
+	ItemStack cable = Items.getItem("insulatedGoldCableItem");
+	ItemStack tin = Items.getItem("platetin");
+	ItemStack charger = Items.getItem("RTGenerator");
+	ItemStack transmit = Items.getItem("insulatedIronCableItem");
+	GameRegistry.addRecipe(new ItemStack(PowerConverterCore.converterBlockCommon, 1, 0), "CTC", "SDS", "CTC", 'C', cable, 'T', tin, 'S', storage, 'D', Item.diamond);
+	GameRegistry.addRecipe(new ItemStack(PowerConverterCore.converterBlockCommon, 1, 2), "T#T", "CSC", "TCT", 'T', transmit, 'C', cable, 'S', Block.chest, '#', charger);
     }
 }

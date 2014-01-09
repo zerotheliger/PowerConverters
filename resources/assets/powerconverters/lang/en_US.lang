@@ -33,8 +33,10 @@ powerconverters.ic2.lv.consumer.name = EU LV Consumer
 powerconverters.ic2.mv.consumer.name = EU MV Consumer
 powerconverters.ic2.hv.consumer.name = EU HV Consumer
 powerconverters.ic2.ev.consumer.name = EU EV Consumer
+powerconverters.ic2.uv.consumer.name = EU UV Consumer
 
 powerconverters.ic2.lv.producer.name = EU LV Producer
 powerconverters.ic2.mv.producer.name = EU MV Producer
 powerconverters.ic2.hv.producer.name = EU HV Producer
 powerconverters.ic2.ev.producer.name = EU EV Producer
+powerconverters.ic2.uv.producer.name = EU UV Producer

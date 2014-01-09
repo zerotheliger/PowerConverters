@@ -31,7 +31,7 @@ public final class BuildCraft extends LoaderBase
     @Override
     protected void preInit()
     {
-	powerSystem = new PowerSystem("BuildCraft", "BC", 1000, 1000,/*4375, 4375*/null, null, "MJ/t");
+	powerSystem = new PowerSystem("BuildCraft", "BC", 10000, 10000,/*4375, 4375*/null, null, "MJ/t");
 	PowerSystem.registerPowerSystem(powerSystem);
     }
 
@@ -56,6 +56,12 @@ public final class BuildCraft extends LoaderBase
 	    ItemStack gear = new ItemStack((Item) Class.forName("buildcraft.BuildCraftCore").getField("goldGearItem").get(null), 1, 0);
 	    ItemStack engine = new ItemStack((Block) Class.forName("buildcraft.BuildCraftEnergy").getField("engineBlock").get(null), 1, 1);
 	    GameRegistry.addRecipe(new ItemStack(converterBlock, 1, 0), "GSG", "SES", "GSG", 'G', cable, 'S', struct, 'E', gear);
+
+	    ItemStack conduit = new ItemStack((Item) Class.forName("buildcraft.BuildCraftTransport").getField("pipePowerDiamond").get(null), 1, 0);
+	    ItemStack chest = new ItemStack((Block) Class.forName("buildcraft.BuildCraftTransport").getField("filteredBufferBlock").get(null), 1, 0);
+
+	    GameRegistry.addRecipe(new ItemStack(PowerConverterCore.converterBlockCommon, 1, 0), "PPP", "PBP", "PPP", 'B', Block.blockRedstone, 'P', conduit);
+	    GameRegistry.addRecipe(new ItemStack(PowerConverterCore.converterBlockCommon, 1, 2), "TGT", "#S#", "T#T", 'T', cable, 'S', chest, '#', engine, 'G', gear);
 	} catch (Throwable t)
 	{
 	    t.printStackTrace(System.err);

@@ -1,7 +1,5 @@
 package powercrystals.powerconverters;
 
-import ic2.api.item.Items;
-
 import java.io.File;
 
 import net.minecraft.block.Block;
@@ -19,6 +17,10 @@ import powercrystals.powerconverters.mods.IndustrialCraft;
 import powercrystals.powerconverters.mods.ThermalExpansion;
 import powercrystals.powerconverters.mods.base.LoaderBase;
 import powercrystals.powerconverters.power.PowerSystem;
+import powercrystals.powerconverters.power.steam.BlockPowerConverterSteam;
+import powercrystals.powerconverters.power.steam.ItemBlockPowerConverterSteam;
+import powercrystals.powerconverters.power.steam.TileEntitySteamConsumer;
+import powercrystals.powerconverters.power.steam.TileEntitySteamProducer;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -39,7 +41,7 @@ public final class PowerConverterCore
 {
     public static final String modId = "PowerConverters";
     public static final String modName = "Power Converters";
-    public static final String version = "1.6.4R2.4.0pre1a";
+    public static final String version = "1.6.4R2.4.0pre2";
 
     public static final String texturesFolder = modId + ":";
     public static final String guiFolder = modId + ":" + "textures/gui/";
@@ -58,7 +60,8 @@ public final class PowerConverterCore
     public static int bridgeBufferSize;
     public static int throttleSteamConsumer;
     public static int throttleSteamProducer;
-    //public static PowerSystem powerSystemSteam;
+    public static PowerSystem powerSystemSteam;
+    public static boolean powerSystemSteamEnabled;
 
     private static int blockIdCommon;
     private static int blockIdSteam;
@@ -67,8 +70,8 @@ public final class PowerConverterCore
     @EventHandler
     public void preInit(FMLPreInitializationEvent evt)
     {
-	//powerSystemSteam = new PowerSystem("Steam", "STEAM", 875, 875, null, null, "mB/t");
-	//PowerSystem.registerPowerSystem(powerSystemSteam);
+	powerSystemSteam = new PowerSystem("Steam", "STEAM", 500, 500,/*875, 875,*/null, null, "mB/t");
+	PowerSystem.registerPowerSystem(powerSystemSteam);
 	for (LoaderBase base : bases)
 	    base.load(LoaderBase.Stage.PREINIT);
 
@@ -80,7 +83,8 @@ public final class PowerConverterCore
     @EventHandler
     public void init(FMLInitializationEvent evt) throws Exception
     {
-	//loadSteamConverters();
+	if (powerSystemSteamEnabled)
+	    loadSteamConverters();
 	for (LoaderBase base : bases)
 	    base.load(LoaderBase.Stage.INIT);
     }
@@ -96,47 +100,17 @@ public final class PowerConverterCore
 	for (LoaderBase base : bases)
 	    base.load(LoaderBase.Stage.POSTINIT);
 
-	if (Loader.isModLoaded("ThermalExpansion"))
-	{
-	    ItemStack storage = GameRegistry.findItemStack("ThermalExpansion", "cellBasic", 1);
-	    ItemStack transmit = GameRegistry.findItemStack("ThermalExpansion", "powerCoilSilver", 1);
-	    ItemStack charger = GameRegistry.findItemStack("ThermalExpansion", "charger", 1);
-	    ItemStack conduit = GameRegistry.findItemStack("ThermalExpansion", "conduitEnergyHardened", 1);
-	    GameRegistry.addRecipe(new ItemStack(converterBlockCommon, 1, 0), " T ", "SDS", " T ", 'T', transmit, 'S', storage, 'D', Item.diamond);
-	    GameRegistry.addRecipe(new ItemStack(converterBlockCommon, 1, 2), "T#T", "CSC", "TCT", 'T', transmit, 'C', conduit, 'S', Block.chest, '#', charger);
-	}
-	if (Loader.isModLoaded("IC2"))
-	{
-	    ItemStack storage = Items.getItem("batBox");
-	    ItemStack cable = Items.getItem("insulatedGoldCableItem");
-	    ItemStack tin = Items.getItem("platetin");
-	    ItemStack charger = Items.getItem("generator");
-	    ItemStack transmit = Items.getItem("insulatedIronCableItem");
-	    GameRegistry.addRecipe(new ItemStack(converterBlockCommon, 1, 0), "CTC", "SDS", "CTC", 'C', cable, 'T', tin, 'S', storage, 'D', Item.diamond);
-	    GameRegistry.addRecipe(new ItemStack(converterBlockCommon, 1, 2), "T#T", "CSC", "TCT", 'T', transmit, 'C', cable, 'S', Block.chest, '#', charger);
-	}
-	if (Loader.isModLoaded("BuildCraft|Energy"))
-	{
-	    try
-	    {
-		ItemStack conduit = new ItemStack((Item) Class.forName("buildcraft.BuildCraftTransport").getField("pipePowerDiamond").get(null), 1, 0);
-		ItemStack chest = new ItemStack((Block) Class.forName("buildcraft.BuildCraftTransport").getField("filteredBufferBlock").get(null), 1, 0);
-		ItemStack cable = new ItemStack((Item) Class.forName("buildcraft.BuildCraftTransport").getField("pipePowerGold").get(null), 1, 0);
-		ItemStack gear = new ItemStack((Item) Class.forName("buildcraft.BuildCraftCore").getField("goldGearItem").get(null), 1, 0);
-		ItemStack engine = new ItemStack((Block) Class.forName("buildcraft.BuildCraftEnergy").getField("engineBlock").get(null), 1, 1);
+	System.out.println("+++++++++++++++++++++++++[PowerConverters][NOTICE]+++++++++++++++++++++++++");
+	System.out.println("Default power ratios are based on FTB standards and not all mods follow these");
+	System.out.println("If you find conflicting ratios in your pack, please adjust the config acoordingly or remove PC");
+	System.out.println("These conflicts are not the fault of any mod author. It is the nature on minecraft");
+	System.out.println("-------------------------[PowerConverters][STEAM]-------------------------");
+	System.out.println("Default steam ratios, while based on standards, will create infinite energy loops");
+	System.out.println("To prevent over powered infinite energy, use my sugested steam values listed in comments");
+	System.out.println("+++++++++++++++++++++++++[PowerConverters][NOTICE]+++++++++++++++++++++++++");
 
-		GameRegistry.addRecipe(new ItemStack(converterBlockCommon, 1, 0), "PPP", "PBP", "PPP", 'B', Block.blockRedstone, 'P', conduit);
-		GameRegistry.addRecipe(new ItemStack(converterBlockCommon, 1, 2), "TGT", "#S#", "T#T", 'T', cable, 'S', chest, '#', engine, 'G', gear);
-	    } catch (Throwable t)
-	    {
-		t.printStackTrace(System.err);
-	    }
-	}
-	//if (Loader.isModLoaded("Forestry"))
+	//original recipes
 	//    GameRegistry.addRecipe(new ItemStack(converterBlockCommon, 1, 0), "GRG", "LDL", "GRG", 'G', Item.ingotGold, 'R', Item.redstone, 'L', Block.glass, 'D', Item.diamond);
-	//if (Loader.isModLoaded("Railcraft"))
-	//    GameRegistry.addRecipe(new ItemStack(converterBlockCommon, 1, 0), "GRG", "LDL", "GRG", 'G', Item.ingotGold, 'R', Item.redstone, 'L', Block.glass, 'D', Item.diamond);
-
 	//    GameRegistry.addRecipe(new ItemStack(converterBlockCommon, 1, 2), "GRG", "ICI", "GRG", 'G', Item.ingotGold, 'R', Item.redstone, 'I', Item.ingotIron, 'C', Block.chest);
 
 	NetworkRegistry.instance().registerGuiHandler(instance, new PCGUIHandler());
@@ -146,29 +120,29 @@ public final class PowerConverterCore
 	bases = null;
     }
 
-    /*private void loadSteamConverters() throws Exception
+    private void loadSteamConverters() throws Exception
     {
-    // Special handling case just for steam
-    if (Loader.isModLoaded("Railcraft") || Loader.isModLoaded("factorization"))
-    {
-        converterBlockSteam = new BlockPowerConverterSteam(blockIdSteam);
-        GameRegistry.registerBlock(converterBlockSteam, ItemBlockPowerConverterSteam.class, converterBlockSteam.getUnlocalizedName());
-        GameRegistry.registerTileEntity(TileEntitySteamConsumer.class, "powerConverterSteamConsumer");
-        GameRegistry.registerTileEntity(TileEntitySteamProducer.class, "powerConverterSteamProducer");
+	// Special handling case just for steam
+	if (Loader.isModLoaded("Railcraft") || Loader.isModLoaded("factorization"))
+	{
+	    converterBlockSteam = new BlockPowerConverterSteam(blockIdSteam);
+	    GameRegistry.registerBlock(converterBlockSteam, ItemBlockPowerConverterSteam.class, converterBlockSteam.getUnlocalizedName());
+	    GameRegistry.registerTileEntity(TileEntitySteamConsumer.class, "powerConverterSteamConsumer");
+	    GameRegistry.registerTileEntity(TileEntitySteamProducer.class, "powerConverterSteamProducer");
 
-        if (Loader.isModLoaded("Railcraft"))
-        {
-    	GameRegistry.addRecipe(new ItemStack(converterBlockSteam, 1, 0), "G G", " E ", "G G", 'G', Item.ingotGold, 'E', new ItemStack((Block) (Class.forName("mods.railcraft.common.blocks.RailcraftBlocks").getMethod("getBlockMachineBeta").invoke(null)), 1, 8));
-        } else
-        {
-    	Object fzRegistry = Class.forName("factorization.common.Core").getField("registry").get(null);
-    	GameRegistry.addRecipe(new ItemStack(converterBlockSteam, 1, 0), "G G", " E ", "G G", 'G', Item.ingotGold, 'E', (Class.forName("factorization.common.Registry").getField("steamturbine_item").get(fzRegistry)));
-        }
+	    if (Loader.isModLoaded("Railcraft"))
+	    {
+		GameRegistry.addRecipe(new ItemStack(converterBlockSteam, 1, 0), "G G", " E ", "G G", 'G', Item.ingotGold, 'E', new ItemStack((Block) (Class.forName("mods.railcraft.common.blocks.RailcraftBlocks").getMethod("getBlockMachineBeta").invoke(null)), 1, 8));
+	    } else
+	    {
+		Object fzRegistry = Class.forName("factorization.common.Core").getField("registry").get(null);
+		GameRegistry.addRecipe(new ItemStack(converterBlockSteam, 1, 0), "G G", " E ", "G G", 'G', Item.ingotGold, 'E', (Class.forName("factorization.common.Registry").getField("steamturbine_item").get(fzRegistry)));
+	    }
 
-        GameRegistry.addShapelessRecipe(new ItemStack(converterBlockSteam, 1, 1), new ItemStack(converterBlockSteam, 1, 0));
-        GameRegistry.addShapelessRecipe(new ItemStack(converterBlockSteam, 1, 0), new ItemStack(converterBlockSteam, 1, 1));
+	    GameRegistry.addShapelessRecipe(new ItemStack(converterBlockSteam, 1, 1), new ItemStack(converterBlockSteam, 1, 0));
+	    GameRegistry.addShapelessRecipe(new ItemStack(converterBlockSteam, 1, 0), new ItemStack(converterBlockSteam, 1, 1));
+	}
     }
-    }*/
 
     private static void loadConfig(File dir)
     {
@@ -184,7 +158,7 @@ public final class PowerConverterCore
 
 	bridgeBufferSize = c.get(Configuration.CATEGORY_GENERAL, "BridgeBufferSize", 160000000).getInt();
 	throttleSteamConsumer = c.get("Throttles", "Steam.Consumer", 1000, "mB/t").getInt();
-	throttleSteamProducer = c.get("Throttles", "Steam.Producer", 1000, "mB/t").getInt();
+	throttleSteamProducer = c.get("Throttles", "Steam.Producer", 1000, "mB/t (Sugested value for mod exploit handling = 1; this does not diminish steam return)").getInt();
 
 	PowerSystem.loadConfig(c);
 	c.save();

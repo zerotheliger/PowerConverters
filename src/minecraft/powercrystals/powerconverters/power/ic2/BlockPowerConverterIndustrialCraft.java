@@ -65,9 +65,9 @@ public class BlockPowerConverterIndustrialCraft extends BlockPowerConverter
 	_icons[13] = ir.registerIcon(PowerConverterCore.texturesFolder + getUnlocalizedName() + ".ev.consumer.on");
 	_icons[14] = ir.registerIcon(PowerConverterCore.texturesFolder + getUnlocalizedName() + ".ev.producer.off");
 	_icons[15] = ir.registerIcon(PowerConverterCore.texturesFolder + getUnlocalizedName() + ".ev.producer.on");
-	_icons[16] = ir.registerIcon(PowerConverterCore.texturesFolder + getUnlocalizedName() + ".av.consumer.off");
-	_icons[17] = ir.registerIcon(PowerConverterCore.texturesFolder + getUnlocalizedName() + ".av.consumer.on");
-	_icons[18] = ir.registerIcon(PowerConverterCore.texturesFolder + getUnlocalizedName() + ".av.producer.off");
-	_icons[19] = ir.registerIcon(PowerConverterCore.texturesFolder + getUnlocalizedName() + ".av.producer.on");
+	_icons[16] = ir.registerIcon(PowerConverterCore.texturesFolder + getUnlocalizedName() + ".uv.consumer.off");
+	_icons[17] = ir.registerIcon(PowerConverterCore.texturesFolder + getUnlocalizedName() + ".uv.consumer.on");
+	_icons[18] = ir.registerIcon(PowerConverterCore.texturesFolder + getUnlocalizedName() + ".uv.producer.off");
+	_icons[19] = ir.registerIcon(PowerConverterCore.texturesFolder + getUnlocalizedName() + ".uv.producer.on");
     }
 }

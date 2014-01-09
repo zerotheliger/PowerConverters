@@ -1,5 +1,7 @@
 package powercrystals.powerconverters.mods;
 
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import powercrystals.powerconverters.PowerConverterCore;
 import powercrystals.powerconverters.common.TileEntityCharger;
@@ -32,7 +34,7 @@ public final class ThermalExpansion extends LoaderBase
     @Override
     protected void preInit()
     {
-	powerSystem = new PowerSystem("Thermal Expansion", "RF", /*437.5F, 437.5F*/100, 100, null, null, "RF/t");
+	powerSystem = new PowerSystem("Thermal Expansion", "RF", /*437.5F, 437.5F*/1000, 1000, null, null, "RF/t");
 	PowerSystem.registerPowerSystem(powerSystem);
 	TileEntityCharger.registerChargeHandler(new ChargeHandlerRF());
     }
@@ -59,6 +61,12 @@ public final class ThermalExpansion extends LoaderBase
 	    ItemStack recieve = GameRegistry.findItemStack("ThermalExpansion", "powerCoilGold", 1);
 
 	    GameRegistry.addRecipe(new ItemStack(converterBlock, 1, 0), "CTC", "RSR", "CTC", 'S', cell, 'C', conduit, 'R', recieve, 'T', transmit);
+
+	    ItemStack storage = GameRegistry.findItemStack("ThermalExpansion", "cellBasic", 1);
+	    ItemStack charger = GameRegistry.findItemStack("ThermalExpansion", "charger", 1);
+	    ItemStack hconduit = GameRegistry.findItemStack("ThermalExpansion", "conduitEnergyHardened", 1);
+	    GameRegistry.addRecipe(new ItemStack(PowerConverterCore.converterBlockCommon, 1, 0), " T ", "SDS", " T ", 'T', transmit, 'S', storage, 'D', Item.diamond);
+	    GameRegistry.addRecipe(new ItemStack(PowerConverterCore.converterBlockCommon, 1, 2), "T#T", "CSC", "TCT", 'T', transmit, 'C', hconduit, 'S', Block.chest, '#', charger);
 	}
     }
 }
