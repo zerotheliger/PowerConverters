@@ -70,12 +70,18 @@ public final class IndustrialCraft extends LoaderBase
 	//GameRegistry.addRecipe(new ItemStack(converterBlock, 1, 2), "G G", " T ", "G G", 'G', Item.ingotGold, 'T', Items.getItem("mvTransformer"));
 	//GameRegistry.addRecipe(new ItemStack(converterBlock, 1, 4), "G G", " T ", "G G", 'G', Item.ingotGold, 'T', Items.getItem("hvTransformer"));
 	//GameRegistry.addRecipe(new ItemStack(converterBlock, 1, 6), "G G", " T ", "G G", 'G', Item.ingotGold, 'T', Items.getItem("evTransformer"));
+	ItemStack fluid = new ItemStack(Items.getItem("ejectorUpgrade").itemID, 1, 4);
 	ItemStack storage = Items.getItem("batBox");
 	ItemStack cable = Items.getItem("insulatedGoldCableItem");
 	ItemStack tin = Items.getItem("platetin");
 	ItemStack charger = Items.getItem("RTGenerator");
 	ItemStack transmit = Items.getItem("insulatedIronCableItem");
-	GameRegistry.addRecipe(new ItemStack(PowerConverterCore.converterBlockCommon, 1, 0), "CTC", "SDS", "CTC", 'C', cable, 'T', tin, 'S', storage, 'D', Item.diamond);
-	GameRegistry.addRecipe(new ItemStack(PowerConverterCore.converterBlockCommon, 1, 2), "T#T", "CSC", "TCT", 'T', transmit, 'C', cable, 'S', Block.chest, '#', charger);
+	if (IndustrialCraft.INSTANCE.powerSystem.getRecipesEnabled())
+	{
+	    GameRegistry.addRecipe(new ItemStack(PowerConverterCore.converterBlockCommon, 1, 0), "CTC", "SDS", "CTC", 'C', cable, 'T', tin, 'S', storage, 'D', Item.diamond);
+	    GameRegistry.addRecipe(new ItemStack(PowerConverterCore.converterBlockCommon, 1, 2), "T#T", "CSC", "TCT", 'T', transmit, 'C', cable, 'S', Block.chest, '#', charger);
+	    if (PowerConverterCore.powerSystemSteamEnabled)
+		GameRegistry.addRecipe(new ItemStack(PowerConverterCore.converterBlockSteam, 1, 0), "CPC", "PTP", "CPC", 'C', Items.getItem("FluidCell"), 'P', Items.getItem("platebronze"), 'T', fluid);
+	}
     }
 }

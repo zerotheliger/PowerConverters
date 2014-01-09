@@ -3,7 +3,6 @@ package powercrystals.powerconverters;
 import java.io.File;
 
 import net.minecraft.block.Block;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
@@ -41,7 +40,7 @@ public final class PowerConverterCore
 {
     public static final String modId = "PowerConverters";
     public static final String modName = "Power Converters";
-    public static final String version = "1.6.4R2.4.0pre2";
+    public static final String version = "1.6.4R2.4.0pre3";
 
     public static final String texturesFolder = modId + ":";
     public static final String guiFolder = modId + ":" + "textures/gui/";
@@ -106,7 +105,7 @@ public final class PowerConverterCore
 	System.out.println("These conflicts are not the fault of any mod author. It is the nature on minecraft");
 	System.out.println("-------------------------[PowerConverters][STEAM]-------------------------");
 	System.out.println("Default steam ratios, while based on standards, will create infinite energy loops");
-	System.out.println("To prevent over powered infinite energy, use my sugested steam values listed in comments");
+	System.out.println("To prevent over powered infinite energy, use a steam throttle values of less than 5");
 	System.out.println("+++++++++++++++++++++++++[PowerConverters][NOTICE]+++++++++++++++++++++++++");
 
 	//original recipes
@@ -122,8 +121,6 @@ public final class PowerConverterCore
 
     private void loadSteamConverters() throws Exception
     {
-	// Special handling case just for steam
-	if (Loader.isModLoaded("Railcraft") || Loader.isModLoaded("factorization"))
 	{
 	    converterBlockSteam = new BlockPowerConverterSteam(blockIdSteam);
 	    GameRegistry.registerBlock(converterBlockSteam, ItemBlockPowerConverterSteam.class, converterBlockSteam.getUnlocalizedName());
@@ -132,11 +129,11 @@ public final class PowerConverterCore
 
 	    if (Loader.isModLoaded("Railcraft"))
 	    {
-		GameRegistry.addRecipe(new ItemStack(converterBlockSteam, 1, 0), "G G", " E ", "G G", 'G', Item.ingotGold, 'E', new ItemStack((Block) (Class.forName("mods.railcraft.common.blocks.RailcraftBlocks").getMethod("getBlockMachineBeta").invoke(null)), 1, 8));
+		//GameRegistry.addRecipe(new ItemStack(converterBlockSteam, 1, 0), "G G", " E ", "G G", 'G', Item.ingotGold, 'E', new ItemStack((Block) (Class.forName("mods.railcraft.common.blocks.RailcraftBlocks").getMethod("getBlockMachineBeta").invoke(null)), 1, 8));
 	    } else
 	    {
-		Object fzRegistry = Class.forName("factorization.common.Core").getField("registry").get(null);
-		GameRegistry.addRecipe(new ItemStack(converterBlockSteam, 1, 0), "G G", " E ", "G G", 'G', Item.ingotGold, 'E', (Class.forName("factorization.common.Registry").getField("steamturbine_item").get(fzRegistry)));
+		//Object fzRegistry = Class.forName("factorization.common.Core").getField("registry").get(null);
+		//GameRegistry.addRecipe(new ItemStack(converterBlockSteam, 1, 0), "G G", " E ", "G G", 'G', Item.ingotGold, 'E', (Class.forName("factorization.common.Registry").getField("steamturbine_item").get(fzRegistry)));
 	    }
 
 	    GameRegistry.addShapelessRecipe(new ItemStack(converterBlockSteam, 1, 1), new ItemStack(converterBlockSteam, 1, 0));

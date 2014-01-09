@@ -62,11 +62,20 @@ public final class ThermalExpansion extends LoaderBase
 
 	    GameRegistry.addRecipe(new ItemStack(converterBlock, 1, 0), "CTC", "RSR", "CTC", 'S', cell, 'C', conduit, 'R', recieve, 'T', transmit);
 
+	    ItemStack fluid = GameRegistry.findItemStack("ThermalExpansion", "conduitFluidOpaque", 1);
+	    ItemStack tank = GameRegistry.findItemStack("ThermalExpansion", "tankBasic", 1);
+	    ItemStack frame = GameRegistry.findItemStack("ThermalExpansion", "machineFrame", 1);
+
 	    ItemStack storage = GameRegistry.findItemStack("ThermalExpansion", "cellBasic", 1);
 	    ItemStack charger = GameRegistry.findItemStack("ThermalExpansion", "charger", 1);
 	    ItemStack hconduit = GameRegistry.findItemStack("ThermalExpansion", "conduitEnergyHardened", 1);
-	    GameRegistry.addRecipe(new ItemStack(PowerConverterCore.converterBlockCommon, 1, 0), " T ", "SDS", " T ", 'T', transmit, 'S', storage, 'D', Item.diamond);
-	    GameRegistry.addRecipe(new ItemStack(PowerConverterCore.converterBlockCommon, 1, 2), "T#T", "CSC", "TCT", 'T', transmit, 'C', hconduit, 'S', Block.chest, '#', charger);
+	    if (ThermalExpansion.INSTANCE.powerSystem.getRecipesEnabled())
+	    {
+		GameRegistry.addRecipe(new ItemStack(PowerConverterCore.converterBlockCommon, 1, 0), " T ", "SDS", " T ", 'T', transmit, 'S', storage, 'D', Item.diamond);
+		GameRegistry.addRecipe(new ItemStack(PowerConverterCore.converterBlockCommon, 1, 2), "T#T", "CSC", "TCT", 'T', transmit, 'C', hconduit, 'S', Block.chest, '#', charger);
+		if (PowerConverterCore.powerSystemSteamEnabled)
+		    GameRegistry.addRecipe(new ItemStack(PowerConverterCore.converterBlockSteam, 1, 0), "CTC", "TST", "CTC", 'S', tank, 'C', fluid, 'T', frame);
+	    }
 	}
     }
 }

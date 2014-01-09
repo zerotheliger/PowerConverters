@@ -56,12 +56,19 @@ public final class BuildCraft extends LoaderBase
 	    ItemStack gear = new ItemStack((Item) Class.forName("buildcraft.BuildCraftCore").getField("goldGearItem").get(null), 1, 0);
 	    ItemStack engine = new ItemStack((Block) Class.forName("buildcraft.BuildCraftEnergy").getField("engineBlock").get(null), 1, 1);
 	    GameRegistry.addRecipe(new ItemStack(converterBlock, 1, 0), "GSG", "SES", "GSG", 'G', cable, 'S', struct, 'E', gear);
+	    ItemStack pump = new ItemStack((Block) Class.forName("buildcraft.BuildCraftFactory").getField("pumpBlock").get(null), 1, 0);
 
 	    ItemStack conduit = new ItemStack((Item) Class.forName("buildcraft.BuildCraftTransport").getField("pipePowerDiamond").get(null), 1, 0);
 	    ItemStack chest = new ItemStack((Block) Class.forName("buildcraft.BuildCraftTransport").getField("filteredBufferBlock").get(null), 1, 0);
+	    ItemStack fluid = new ItemStack((Item) Class.forName("buildcraft.BuildCraftTransport").getField("pipeFluidsGold").get(null), 1, 0);
 
-	    GameRegistry.addRecipe(new ItemStack(PowerConverterCore.converterBlockCommon, 1, 0), "PPP", "PBP", "PPP", 'B', Block.blockRedstone, 'P', conduit);
-	    GameRegistry.addRecipe(new ItemStack(PowerConverterCore.converterBlockCommon, 1, 2), "TGT", "#S#", "T#T", 'T', cable, 'S', chest, '#', engine, 'G', gear);
+	    if (BuildCraft.INSTANCE.powerSystem.getRecipesEnabled())
+	    {
+		GameRegistry.addRecipe(new ItemStack(PowerConverterCore.converterBlockCommon, 1, 0), "PPP", "PBP", "PPP", 'B', Block.blockRedstone, 'P', conduit);
+		GameRegistry.addRecipe(new ItemStack(PowerConverterCore.converterBlockCommon, 1, 2), "TGT", "#S#", "T#T", 'T', cable, 'S', chest, '#', engine, 'G', gear);
+		if (PowerConverterCore.powerSystemSteamEnabled)
+		    GameRegistry.addRecipe(new ItemStack(PowerConverterCore.converterBlockSteam, 1, 0), "GSG", "SES", "GSG", 'G', fluid, 'S', struct, 'E', pump);
+	    }
 	} catch (Throwable t)
 	{
 	    t.printStackTrace(System.err);

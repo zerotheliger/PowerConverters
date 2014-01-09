@@ -16,6 +16,7 @@ public class PowerSystem
     private String _name;
     private float _internalEnergyPerInput;
     private float _internalEnergyPerOutput;
+    private boolean _enableRecipes;
     private String[] _voltageNames;
     private int[] _voltageValues;
     private String _unit;
@@ -49,6 +50,11 @@ public class PowerSystem
 	return _abbreviation;
     }
 
+    public boolean getRecipesEnabled()
+    {
+	return _enableRecipes;
+    }
+
     public static void loadConfig(Configuration c)
     {
 	String powerRatioComment = "Not all power systems listed here are necessarily used; they may be provided so that\r\n" + "the ratios are all stored in a single place and for possible future use.";
@@ -60,6 +66,8 @@ public class PowerSystem
 	    String configSection = "PowerRatios." + p.getValue()._name;
 	    p.getValue()._internalEnergyPerInput = (float) c.get(configSection, p.getValue()._name + "InternalEnergyPerEachInput", p.getValue()._internalEnergyPerInput).getDouble(p.getValue()._internalEnergyPerInput);
 	    p.getValue()._internalEnergyPerOutput = (float) c.get(configSection, p.getValue()._name + "InternalEnergyPerEachOutput", p.getValue()._internalEnergyPerOutput).getDouble(p.getValue()._internalEnergyPerOutput);
+	    if (p.getValue()._name != "Steam")
+		p.getValue()._enableRecipes = (boolean) c.get(configSection, p.getValue()._name + "OptionalRecipesEnabled", true).getBoolean(true);
 	}
 	PowerConverterCore.powerSystemSteamEnabled = c.get("PowerRatios.Steam", "Enable Steam Converters", true).getBoolean(true);
     }
