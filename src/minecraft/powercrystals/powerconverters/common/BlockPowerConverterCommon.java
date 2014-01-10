@@ -25,7 +25,7 @@ public class BlockPowerConverterCommon extends BlockContainer
 
     public BlockPowerConverterCommon(int i)
     {
-	super(i, Material.iron);
+	super(i, Material.clay);
 	setHardness(1.0F);
 	setUnlocalizedName("powerconverters.common");
 	setCreativeTab(PCCreativeTab.tab);
