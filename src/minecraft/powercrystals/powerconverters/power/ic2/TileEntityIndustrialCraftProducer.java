@@ -41,6 +41,8 @@ public class TileEntityIndustrialCraftProducer extends TileEntityEnergyProducer<
             maxSendEnergy = 512;
         else if (index == 3) // ev
             maxSendEnergy = 2048;
+        else if (index == 4) // uv
+            maxSendEnergy = 8192;
         else
             maxSendEnergy = 0;
     }
