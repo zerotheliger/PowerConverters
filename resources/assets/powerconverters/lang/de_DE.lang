@@ -1,0 +1,42 @@
+powerconverters.inputlimited = INPUT BEGRENZT
+powerconverters.outputlimited = OUTPUT BEGRENZT
+
+powerconverters.in = EIN
+powerconverters.out = AUS
+powerconverters.none = <NICHTS>
+powerconverters.nolink = KEIN LINK
+powerconverters.percentfull = VOLL
+
+powerconverters.up = OBEN
+powerconverters.down = UNTEN
+powerconverters.south = SÜD
+powerconverters.north = NORD
+powerconverters.west = WEST
+powerconverters.east = OST
+
+powerconverters.common.bridge.name = Energiebrücke
+powerconverters.common.charger.name = Universalladegerät
+
+powerconverters.bc.consumer.name = MJ-Konsument
+powerconverters.bc.producer.name = MJ-Produzent
+
+powerconverters.steam.consumer.name = Dampfkonsument
+powerconverters.steam.producer.name = Dampfproduzent
+
+powerconverters.fz.consumer.name = Factorization-Konsument
+powerconverters.fz.producer.name = Factorization-Produzent
+
+powerconverters.te.consumer.name = RF-Konsument
+powerconverters.te.producer.name = RF-Produzent
+
+powerconverters.ic2.lv.consumer.name = EU NS-Konsument
+powerconverters.ic2.mv.consumer.name = EU MS-Konsument
+powerconverters.ic2.hv.consumer.name = EU HS-Konsument
+powerconverters.ic2.ev.consumer.name = EU ES-Konsument
+powerconverters.ic2.uv.consumer.name = EU US-Konsument
+
+powerconverters.ic2.lv.producer.name = EU NS-Produzent
+powerconverters.ic2.mv.producer.name = EU MS-Produzent
+powerconverters.ic2.hv.producer.name = EU HS-Produzent
+powerconverters.ic2.ev.producer.name = EU ES-Produzent
+powerconverters.ic2.uv.producer.name = EU US-Produzent
