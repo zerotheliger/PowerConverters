@@ -1,0 +1,42 @@
+powerconverters.inputlimited = ВХОД ОГРАНИЧЕН
+powerconverters.outputlimited = ВЫХОД ОГРАНИЧЕН
+
+powerconverters.in = ВХОД
+powerconverters.out = ВЫХОД
+powerconverters.none = <NONE>
+powerconverters.nolink = НЕТ СОЕДИНЕНИЯ
+powerconverters.percentfull = full
+
+powerconverters.up = ВВЕРХ
+powerconverters.down = ВНИЗ
+powerconverters.south = ЮГ
+powerconverters.north = СЕВЕР
+powerconverters.west = ЗАПАД
+powerconverters.east = ВОСТОК
+
+powerconverters.common.bridge.name = Энергетический мост
+powerconverters.common.charger.name = Универсальный зарядник
+
+powerconverters.bc.consumer.name = Потребитель МДж
+powerconverters.bc.producer.name = Производитель МДж
+
+powerconverters.steam.consumer.name = Потребитель пара
+powerconverters.steam.producer.name = Производитель пара
+
+powerconverters.fz.consumer.name = Потребитель энергии Factorization
+powerconverters.fz.producer.name = Производитель энергии Factorization
+
+powerconverters.te.consumer.name = Потребитель РФ
+powerconverters.te.producer.name = Производитель РФ
+
+powerconverters.ic2.lv.consumer.name = Потребитель еЭ НН
+powerconverters.ic2.mv.consumer.name = Потребитель еЭ СН
+powerconverters.ic2.hv.consumer.name = Потребитель еЭ ВН
+powerconverters.ic2.ev.consumer.name = Потребитель еЭ СВН
+powerconverters.ic2.uv.consumer.name = Потребитель еЭ УН
+
+powerconverters.ic2.lv.producer.name = Производитель еЭ НН
+powerconverters.ic2.mv.producer.name = Производитель еЭ СН
+powerconverters.ic2.hv.producer.name = Производитель еЭ ВН
+powerconverters.ic2.ev.producer.name = Производитель еЭ СВН
+powerconverters.ic2.uv.producer.name = Производитель еЭ УН
